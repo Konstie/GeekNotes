@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#073B70</color>
+    <color name="primary_dark">#012C57</color>
+    <color name="primary_light">#CEE1F2</color>
+    <color name="accent">#175796</color>
+
+    <color name="toolbarTitleColor">#FFFFFF</color>
+    <color name="list_bg">#F2F2F2</color>
+    <color name="list_background">#F2F2F2</color>
+    <color name="button_add_color">#ffd8d8d8</color>
+    <color name="button_add_txt">#424242</color>
+    <color name="button_add_pressed">#B6B6B6</color>
+
+    <color name="refresh_first">#ff130d5e</color>
+    <color name="refresh_second">#ffff1e00</color>
+    <color name="refresh_third">#ff7e269f</color>
+
+    <color name="card_bg">#ffe0e0e0</color>
+</resources>

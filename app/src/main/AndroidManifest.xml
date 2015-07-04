@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gnotes.app" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".GeekNotesActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".NewNoteActivity"
+                android:label="@string/app_name">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".GeekNotesActivity" />
+        </activity>
+        <activity
+                android:name=".ItemArticleActivity"
+                android:label="@string/app_name">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".GeekNotesActivity" />
+        </activity>
+        <provider
+                android:authorities="com.gnotes.app"
+                android:name=".data.GeekNotesContentProvider"
+                android:exported="false"
+                android:syncable="true" />
+        <service android:name=".GeekNotesWikiService"/>
+        <receiver android:name=".GeekNotesWikiService$AlarmReceiver" android:enabled="true"/>
+
+        <service android:name=".GeekNotesImdbService"/>
+        <receiver android:name=".GeekNotesImdbService$AlarmReceiver" android:enabled="true"/>
+    </application>
+
+</manifest>

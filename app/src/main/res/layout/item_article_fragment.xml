@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/parallax_image_height"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/tardis_pattern" />
+
+            <View
+                    android:id="@+id/anchor"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/parallax_image_height"
+                    android:minHeight="@dimen/parallax_image_height" />
+
+            <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_below="@id/anchor"
+                    android:id="@+id/card_view_imdb"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    card_view:cardCornerRadius="1dp"
+                    card_view:cardElevation="4dp">
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="22sp"
+                            android:textColor="@android:color/black"
+                            android:id="@+id/imdbRank"/>
+                    <!--<ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/stars_rating"
+                            android:layout_toRightOf="@+id/imdbRank"
+                            android:layout_marginRight="4dp"/>-->
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_below="@id/card_view_imdb"
+                    android:id="@+id/card_main_info"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:padding="8dp"
+                    android:visibility="visible"
+                    card_view:cardCornerRadius="1dp"
+                    card_view:cardElevation="4dp">
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textColor="@android:color/black"
+                            android:id="@+id/wikiInfo"
+                            android:padding="16dp"/>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_below="@id/card_main_info"
+                    android:id="@+id/card_view_plot"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:visibility="invisible"
+                    card_view:cardCornerRadius="1dp"
+                    card_view:cardElevation="4dp">
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textColor="@android:color/black"
+                            android:id="@+id/imdbPlot"
+                            android:paddingBottom="16dp"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin"/>
+            </android.support.v7.widget.CardView>
+
+            <ImageButton
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_action_search"
+                    android:id="@+id/fab"
+                    android:elevation="1dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignBottom="@id/anchor"
+                    android:layout_marginBottom="-32dp"
+                    android:layout_marginRight="20dp"/>
+        </RelativeLayout>
+
+    </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+    <include layout="@layout/gradient_header" />
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_article"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_gravity="start"
+            android:background="@color/primary_dark"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:elevation="4dp">
+    </android.support.v7.widget.Toolbar>
+</FrameLayout>

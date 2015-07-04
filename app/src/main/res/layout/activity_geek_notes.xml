@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+</include>
+<android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
+        android:elevation="7sp"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/container">
+            </FrameLayout>
+        </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="320dp"
+            android:background="@android:color/white"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:scrollbars="vertical"/>
+
+</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>
