@@ -37,11 +37,11 @@
                 android:name=".data.GeekNotesContentProvider"
                 android:exported="false"
                 android:syncable="true" />
-        <service android:name=".GeekNotesWikiService"/>
-        <receiver android:name=".GeekNotesWikiService$AlarmReceiver" android:enabled="true"/>
+        <service android:name=".services.GeekNotesWikiService"/>
+        <receiver android:name=".services.GeekNotesWikiService$AlarmReceiver" android:enabled="true"/>
 
-        <service android:name=".GeekNotesImdbService"/>
-        <receiver android:name=".GeekNotesImdbService$AlarmReceiver" android:enabled="true"/>
+        <service android:name=".services.GeekNotesImdbService"/>
+        <receiver android:name=".services.GeekNotesImdbService$AlarmReceiver" android:enabled="true"/>
     </application>
 
 </manifest>

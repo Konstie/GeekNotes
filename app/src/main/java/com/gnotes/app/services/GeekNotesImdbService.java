@@ -1,4 +1,4 @@
-package com.gnotes.app;
+package com.gnotes.app.services;
 
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
@@ -20,7 +20,7 @@ import java.net.URL;
 
 public class GeekNotesImdbService extends IntentService {
 
-    private static final String TAG = "GeekNotes Wiki Service";
+    private static final String TAG = "GeekNotes IMDB Service";
 
     public GeekNotesImdbService() {
         super(TAG);
@@ -59,6 +59,8 @@ public class GeekNotesImdbService extends IntentService {
                     .build();
 
             URL url = new URL(imdbURI.toString());
+
+            Log.w("Taaaaaaag IMDB", imdbURI.toString());
 
             Log.w(TAG, imdbURI.toString());
 
@@ -136,7 +138,7 @@ public class GeekNotesImdbService extends IntentService {
         @Override
         public void onReceive(Context context, Intent intent) {
             String title = intent.getStringExtra("ITEM_TITLE");
-            Intent sendIntent = new Intent(context, GeekNotesWikiService.class);
+            Intent sendIntent = new Intent(context, GeekNotesImdbService.class);
             sendIntent.putExtra("ITEM_TITLE", title);
             context.startService(sendIntent);
         }

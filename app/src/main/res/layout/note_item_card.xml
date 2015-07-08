@@ -48,6 +48,7 @@
                                 android:text="Дополнительно: "
                                 android:gravity="center_vertical"
                                 android:textSize="14sp"
+                                android:visibility="gone"
                                 android:layout_marginTop="6dp" android:textColor="@android:color/black"/>
                         <TextView
                                 android:layout_width="wrap_content"
@@ -56,6 +57,7 @@
                                 android:text="Джордж Мартин"
                                 android:gravity="center_vertical"
                                 android:textSize="14sp"
+                                android:visibility="gone"
                                 android:layout_marginTop="6dp" android:textColor="@android:color/black"
                                 android:layout_marginLeft="4dp"/>
                     </LinearLayout>

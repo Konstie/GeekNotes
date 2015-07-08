@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,10 +23,12 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.gnotes.app.data.GeekNotesContract;
 import com.gnotes.app.data.GeekNotesDbHelper;
+import com.gnotes.app.services.GeekNotesImdbService;
+import com.gnotes.app.services.GeekNotesWikiService;
 import com.nineoldandroids.view.ViewHelper;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
 
 public class ItemArticleFragment extends Fragment
         implements ObservableScrollViewCallbacks {
@@ -75,23 +78,6 @@ public class ItemArticleFragment extends Fragment
 
         Intent intent = getActivity().getIntent();
         toolbarTitle = intent.getStringExtra("ITEM_TITLE");
-
-        Cursor cursor = null;
-        cursor = dbHelper.getSpecificNote(toolbarTitle);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                plot = cursor.getString(COL_GEEKNOTE_ARTICLE_INFO);
-                category = cursor.getString(COL_GEEKNOTE_CATEGORY);
-                if (plot != null && (category.equals("Фильмы") || category.equals("Сериал") ||
-                        category.equals("Мультсериал") || category.equals("Мультфильм") ||
-                        category.equals("Аниме"))) {
-                    updateImdbInfo();
-                } else if (plot == null || !plot.equals("")) {
-                    updateWikiInfo();
-                }
-            }
-        }
     }
 
     @Override
@@ -107,6 +93,7 @@ public class ItemArticleFragment extends Fragment
 
         imgThumbnail = (ImageView) rootView.findViewById(R.id.image);
         imgThumbnail.bringToFront();
+        imgThumbnail.setImageResource(R.drawable.bg_tardis);
 
         mToolbarView = rootView.findViewById(R.id.toolbar_article);
         mToolbarView.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.primary)));
@@ -119,36 +106,10 @@ public class ItemArticleFragment extends Fragment
         tvInfo = (TextView) rootView.findViewById(R.id.wikiInfo);
         tvRating = (TextView) rootView.findViewById(R.id.imdbRank);
         tvImdbPlot = (TextView) rootView.findViewById(R.id.imdbPlot);
+
         searchButton = (ImageButton) rootView.findViewById(R.id.fab);
+        searchButton.invalidate();
         searchButton.bringToFront();
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uriUrl = Uri.parse("http://developers.android.com/");
-                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                startActivity(launchBrowser);
-            }
-        });
-
-        Cursor cursor = null;
-        cursor = dbHelper.getSpecificNote(toolbarTitle);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                plot = cursor.getString(COL_GEEKNOTE_ARTICLE_INFO);
-                imdbPlot = cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO);
-                imdbRating = cursor.getString(COL_GEEKNOTE_ARTICLE_RANK);
-                imdbPosterLink = cursor.getString(COL_GEEKNOTE_POSTERLINK);
-            }
-        }
-
-        if (imdbPlot != null && imdbRating != null) {
-            tvImdbPlot.setVisibility(View.VISIBLE);
-            tvRating.setVisibility(View.VISIBLE);
-        } else {
-            tvImdbPlot.setVisibility(View.INVISIBLE);
-            tvRating.setVisibility(View.INVISIBLE);
-        }
 
         return rootView;
     }
@@ -162,7 +123,7 @@ public class ItemArticleFragment extends Fragment
     }
 
     public void updateWikiInfo() {
-        Log.w("TAAAAAAAAG", "Updating info...");
+        Log.w("Wiki articles service", "Updating info...");
         Intent alarmIntent = new Intent(getActivity(), GeekNotesWikiService.AlarmReceiver.class);
         alarmIntent.putExtra("ITEM_TITLE", toolbarTitle);
         PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -171,6 +132,7 @@ public class ItemArticleFragment extends Fragment
     }
 
     public void updateImdbInfo() {
+        Log.w("IMDB Service", "IMDB Service launched!");
         Intent alarmIntent = new Intent(getActivity(), GeekNotesImdbService.AlarmReceiver.class);
         alarmIntent.putExtra("ITEM_TITLE", toolbarTitle);
         PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -181,9 +143,67 @@ public class ItemArticleFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        tvInfo.setText(plot);
-        tvRating.setText(imdbRating);
-        tvImdbPlot.setText(imdbPlot);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uriUrl = Uri.parse("");
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(launchBrowser);
+            }
+        });
+
+        Cursor cursor = dbHelper.getSpecificNote(toolbarTitle);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                plot = cursor.getString(COL_GEEKNOTE_ARTICLE_INFO);
+                imdbPlot = (cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO) != null)
+                        ? cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO) : "";
+                imdbRating = (cursor.getString(COL_GEEKNOTE_ARTICLE_RANK) != null)
+                        ? cursor.getString(COL_GEEKNOTE_ARTICLE_RANK) : "";
+                imdbPosterLink = (cursor.getString(COL_GEEKNOTE_POSTERLINK) != null)
+                        ? cursor.getString(COL_GEEKNOTE_POSTERLINK) : "";
+            }
+        }
+
+        if (!imdbPosterLink.equals("")) {
+            Log.w("IMDB Tag", imdbPosterLink);
+            Picasso.with(getActivity())
+                    .load(imdbPosterLink)
+                    .into(imgThumbnail);
+        }
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                plot = cursor.getString(COL_GEEKNOTE_ARTICLE_INFO);
+                category = cursor.getString(COL_GEEKNOTE_CATEGORY);
+                if ((plot == null || !plot.equals("")) && (category.equals("Фильм") || category.equals("Сериал") ||
+                        category.equals("Мультсериал") || category.equals("Мультфильм") ||
+                        category.equals("Аниме"))) {
+                    updateWikiInfo();
+                    updateImdbInfo();
+                } else if ((plot == null || !plot.equals("")) && (category.equals("Книга") || category.equals("Комикс") ||
+                        category.equals("Муз. исполнитель") || category.equals("Игра"))) {
+                    updateWikiInfo();
+                }
+            }
+        }
+
+        if (plot != null && !plot.equals("")) {
+            tvInfo.setVisibility(View.VISIBLE);
+            tvInfo.setText(plot);
+        }
+
+        if (!imdbPlot.equals("") && !imdbRating.equals("")) {
+            tvImdbPlot.setVisibility(View.VISIBLE);
+            tvRating.setVisibility(View.VISIBLE);
+            tvRating.append(imdbRating);
+            tvImdbPlot.append(imdbPlot);
+        } else {
+            tvImdbPlot.setVisibility(View.GONE);
+            tvRating.setVisibility(View.GONE);
+        }
     }
 
     @Override

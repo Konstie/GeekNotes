@@ -1,4 +1,4 @@
-package com.gnotes.app;
+package com.gnotes.app.services;
 
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
