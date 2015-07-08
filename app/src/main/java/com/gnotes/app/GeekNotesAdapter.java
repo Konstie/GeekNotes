@@ -44,10 +44,6 @@ public class GeekNotesAdapter extends CursorAdapter {
 
         switch (viewType) {
             case VIEW_TYPE_WITHOUT_EXTRA:
-                //viewHolder.extraField.setTextSize(0);
-                //viewHolder.extraInfo.setTextSize(0);
-                //viewHolder.extraField.setText("");
-                //viewHolder.extraInfo.setText("");
                 viewHolder.extraInfo.setVisibility(View.GONE);
                 viewHolder.extraField.setVisibility(View.GONE);
                 break;
