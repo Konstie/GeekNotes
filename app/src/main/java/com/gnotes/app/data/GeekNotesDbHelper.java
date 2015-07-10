@@ -7,8 +7,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.gnotes.app.Item;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class GeekNotesDbHelper {
     private static final int DB_VERSION = 1;
+
+    private static final ArrayList<String> filterCats = new ArrayList<>(
+            Arrays.asList("Все", "Книга", "Фильм", "Сериал",
+                    "Мультсериал", "Мультфильм", "Муз. исполнитель",
+                    "Игра", "Комикс", "Аниме")
+    );
 
     static final String DB_NAME = "geeknotes.db";
 
