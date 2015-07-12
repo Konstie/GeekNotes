@@ -1,18 +1,21 @@
 package com.gnotes.app;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.gnotes.app.data.GeekNotesContract;
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.gnotes.app.data.GeekNotesDbHelper;
-import com.hudomju.swipe.SwipeToDismissTouchListener;
-import com.hudomju.swipe.adapter.ListViewAdapter;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -20,17 +23,13 @@ import java.util.List;
 
 public class GeekNotesFragment extends Fragment {
 
+    private static String title = "";
+
     private GeekNotesDbHelper dbHelper;
     private GeekNotesAdapter adapter;
 
     private ActionBar toolbar;
-    private ListView listView;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
+    private SwipeMenuListView listView;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -40,45 +39,77 @@ public class GeekNotesFragment extends Fragment {
 
         toolbar = ((GeekNotesActivity) getActivity()).getSupportActionBar();
 
-        listView = (ListView) rootView.findViewById(R.id.items_list);
+        listView = (SwipeMenuListView) rootView.findViewById(R.id.items_list);
 
         setTargetFragment(GeekNotesFragment.this, 0);
-        listView.setAdapter(adapter);
 
         listView.setDividerHeight(0);
         listView.setDivider(null);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
-        final SwipeToDismissTouchListener<ListViewAdapter> touchListener =
-                new SwipeToDismissTouchListener<>(
-                        new ListViewAdapter(listView),
-                        new SwipeToDismissTouchListener.DismissCallbacks<ListViewAdapter>() {
-                            @Override
-                            public boolean canDismiss(int i) {
-                                return true;
-                            }
+        dbHelper = new GeekNotesDbHelper(getActivity());
+        adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(), 0);
+        adapter.changeCursor(dbHelper.getAllData());
+        adapter.notifyDataSetChanged();
+        listView.setAdapter(adapter);
 
-                            @Override
-                            public void onDismiss(ListViewAdapter listViewAdapter, int i) {
-                                dbHelper.deleteByID(i);
-                            }
-                        }
-                );
-
-        listView.setOnTouchListener(touchListener);
-        listView.setOnScrollListener((AbsListView.OnScrollListener) touchListener.makeScrollListener());
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String title = ((TextView) view.findViewById(R.id.name)).getText().toString();
-                if (touchListener.existPendingDismisses()) {
-                    touchListener.undoPendingDismiss();
-                } else {
-                    Toast.makeText(getActivity(), title + " removed!", Toast.LENGTH_SHORT).show();
-                }
+                title = ((TextView) view.findViewById(R.id.name)).getText().toString();
                 Intent intent = new Intent(getActivity(), ItemArticleActivity.class);
                 intent.putExtra("ITEM_TITLE", title);
                 startActivity(intent);
+            }
+        });
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu swipeMenu) {
+                SwipeMenuItem infoItem = new SwipeMenuItem(getActivity().getApplicationContext());
+                infoItem.setBackground(new ColorDrawable(Color.YELLOW));
+                infoItem.setWidth(100);
+                infoItem.setIcon(R.drawable.ic_action_info);
+                swipeMenu.addMenuItem(infoItem);
+
+                SwipeMenuItem editItem = new SwipeMenuItem(getActivity().getApplicationContext());
+                editItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0xA5, 0x00)));
+                editItem.setWidth(100);
+                editItem.setIcon(R.drawable.ic_action_edit);
+                swipeMenu.addMenuItem(editItem);
+
+                SwipeMenuItem removeItem = new SwipeMenuItem(
+                        getActivity().getApplicationContext()
+                );
+                removeItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                removeItem.setWidth(100);
+                removeItem.setIcon(R.drawable.ic_action_delete);
+                swipeMenu.addMenuItem(removeItem);
+            }
+        };
+
+        listView.setMenuCreator(creator);
+
+        listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int i, SwipeMenu swipeMenu, int index) {
+                switch (index) {
+                    case 0:
+                        listView.performItemClick(listView.getChildAt(i), i, listView.getItemIdAtPosition(i));
+//                        title = ((TextView) rootView.findViewById(R.id.name)).getText().toString();
+//                        Intent intent = new Intent(getActivity(), ItemArticleActivity.class);
+//                        intent.putExtra("ITEM_TITLE", title);
+//                        startActivity(intent);
+                    case 1:
+                        break;
+                    case 2:
+                        dbHelper.deleteByTitle(title);
+                        Cursor c = dbHelper.getAllData();
+                        c.requery();
+                        adapter.changeCursor(dbHelper.getAllData());
+                        adapter.notifyDataSetChanged();
+                }
+                return false;
             }
         });
 
@@ -97,10 +128,6 @@ public class GeekNotesFragment extends Fragment {
     private class ToolbarSpinnerAdapter extends BaseAdapter {
 
         private List<String> mItems = new ArrayList<>();
-
-        public void addItems(List<String> catItems) {
-            mItems.addAll(catItems);
-        }
 
         @Override
         public int getCount() {
@@ -149,10 +176,10 @@ public class GeekNotesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        dbHelper = new GeekNotesDbHelper(getActivity());
-        adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(), 0);
+
+        Cursor c = dbHelper.getAllData();
+        c.requery();
         adapter.changeCursor(dbHelper.getAllData());
         adapter.notifyDataSetChanged();
-        listView.setAdapter(adapter);
     }
 }

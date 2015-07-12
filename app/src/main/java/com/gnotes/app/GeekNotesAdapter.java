@@ -13,6 +13,16 @@ public class GeekNotesAdapter extends CursorAdapter {
     private static final int VIEW_TYPE_WITHOUT_EXTRA = 0;
     private static final int VIEW_TYPE_WITH_EXTRA = 1;
 
+    static final int COL_GEEKNOTE_ID = 0;
+    static final int COL_GEEKNOTE_TITLE = 1;
+    static final int COL_GEEKNOTE_CATEGORY = 2;
+    static final int COL_GEEKNOTE_INFOTYPE = 3;
+    static final int COL_GEEKNOTE_INFO = 4;
+    static final int COL_GEEKNOTE_ARTICLE_INFO = 5;
+    static final int COL_GEEKNOTE_ARTICLE_RANK = 6;
+    static final int COL_GEEKNOTE_ARTICLE_IMDB_INFO = 7;
+    static final int COL_GEEKNOTE_POSTERLINK = 8;
+
     private final int[] catIcons = {R.drawable.cat_book, R.drawable.cat_cartoon, R.drawable.cat_comics, R.drawable.cat_game,
             R.drawable.cat_music, R.drawable.cat_series, R.drawable.cat_movie};
 
@@ -38,7 +48,7 @@ public class GeekNotesAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        extrainfo = cursor.getString(GeekNotesFragment.COL_GEEKNOTE_INFO);
+        extrainfo = cursor.getString(COL_GEEKNOTE_INFO);
 
         int viewType = getItemViewType(cursor.getPosition());
 
@@ -48,23 +58,23 @@ public class GeekNotesAdapter extends CursorAdapter {
                 viewHolder.extraField.setVisibility(View.GONE);
                 break;
             case VIEW_TYPE_WITH_EXTRA:
-                viewHolder.extraField.setText(cursor.getString(GeekNotesFragment.COL_GEEKNOTE_INFOTYPE));
-                viewHolder.extraInfo.setText(cursor.getString(GeekNotesFragment.COL_GEEKNOTE_INFO));
+                viewHolder.extraField.setText(cursor.getString(COL_GEEKNOTE_INFOTYPE));
+                viewHolder.extraInfo.setText(cursor.getString(COL_GEEKNOTE_INFO));
                 viewHolder.extraField.setVisibility(View.VISIBLE);
                 viewHolder.extraField.setVisibility(View.VISIBLE);
                 break;
         }
 
-        String title = cursor.getString(GeekNotesFragment.COL_GEEKNOTE_TITLE);
+        String title = cursor.getString(COL_GEEKNOTE_TITLE);
         viewHolder.title.setText(title);
 
-        String category = cursor.getString(GeekNotesFragment.COL_GEEKNOTE_CATEGORY);
+        String category = cursor.getString(COL_GEEKNOTE_CATEGORY);
         viewHolder.category.setText(category);
 
-        String extraInfoType = cursor.getString(GeekNotesFragment.COL_GEEKNOTE_INFOTYPE);
+        String extraInfoType = cursor.getString(COL_GEEKNOTE_INFOTYPE);
         viewHolder.extraField.setText(extraInfoType + ":");
 
-        extrainfo = cursor.getString(GeekNotesFragment.COL_GEEKNOTE_INFO);
+        extrainfo = cursor.getString(COL_GEEKNOTE_INFO);
         viewHolder.extraInfo.setText(this.extrainfo);
 
         if (category.equals("Книга")) {

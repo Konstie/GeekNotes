@@ -37,12 +37,7 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        multiDexEnabled true
     }
 }
 
@@ -60,5 +55,5 @@ dependencies {
     compile(name: 'android-observablescrollview-1.5.0', ext:'aar')
     compile(name: 'universal-image-loader-1.9.4', ext:'jar')
     compile 'com.afollestad:material-dialogs:0.7.0.1'
-    compile 'com.hudomju:swipe-to-dismiss-undo:1.0'
+    compile 'com.baoyz.swipemenulistview:library:1.1.0'
 }
