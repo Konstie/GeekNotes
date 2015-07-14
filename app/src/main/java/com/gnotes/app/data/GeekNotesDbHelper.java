@@ -13,12 +13,6 @@ import java.util.Arrays;
 public class GeekNotesDbHelper {
     private static final int DB_VERSION = 1;
 
-    private static final ArrayList<String> filterCats = new ArrayList<>(
-            Arrays.asList("Все", "Книга", "Фильм", "Сериал",
-                    "Мультсериал", "Мультфильм", "Муз. исполнитель",
-                    "Игра", "Комикс", "Аниме")
-    );
-
     static final String DB_NAME = "geeknotes.db";
 
     private SQLiteDatabase database;

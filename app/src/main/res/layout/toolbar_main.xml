@@ -10,4 +10,3 @@
     android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     android:elevation="4dp">
 </android.support.v7.widget.Toolbar>
-    <!--android:paddingTop="2dp"/-->

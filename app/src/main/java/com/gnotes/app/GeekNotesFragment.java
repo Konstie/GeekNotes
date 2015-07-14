@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +20,22 @@ import com.gnotes.app.data.GeekNotesDbHelper;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GeekNotesFragment extends Fragment {
 
-    private static String title = "";
+    private static final ArrayList<String> filterCats = new ArrayList<>(
+            Arrays.asList("Все", "Книга", "Фильм", "Сериал",
+                    "Мультсериал", "Мультфильм", "Муз. исполнитель",
+                    "Игра", "Комикс", "Аниме")
+    );
 
     private GeekNotesDbHelper dbHelper;
     private GeekNotesAdapter adapter;
 
-    private ActionBar toolbar;
+    private Toolbar toolbar;
+    private Spinner filterSpinner;
     private SwipeMenuListView listView;
 
     @Override
@@ -37,7 +44,21 @@ public class GeekNotesFragment extends Fragment {
                              final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_geeknotes, parent, false);
 
-        toolbar = ((GeekNotesActivity) getActivity()).getSupportActionBar();
+        toolbar = (Toolbar) (getActivity()).findViewById(R.id.toolbar);
+        ((GeekNotesActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle("");
+        toolbar.setLogo(R.drawable.tardis_icon);
+
+        View spinnerContainer = LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_main_spinner, toolbar, false);
+        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        toolbar.addView(spinnerContainer, lp);
+        ToolbarSpinnerAdapter spinnerAdapter = new ToolbarSpinnerAdapter();
+        spinnerAdapter.addItems(filterCats);
+
+        filterSpinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
+        filterSpinner.setAdapter(spinnerAdapter);
 
         listView = (SwipeMenuListView) rootView.findViewById(R.id.items_list);
 
@@ -53,10 +74,31 @@ public class GeekNotesFragment extends Fragment {
         adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
 
+        filterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String chosenCategory = filterSpinner.getSelectedItem().toString();
+                if (chosenCategory.equals("Все")) {
+                    adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(), 0);
+                    listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    adapter = new GeekNotesAdapter(getActivity(), dbHelper.getItemsByCategory(chosenCategory), 0);
+                    listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                title = ((TextView) view.findViewById(R.id.name)).getText().toString();
+                String title = ((TextView) view.findViewById(R.id.name)).getText().toString();
                 Intent intent = new Intent(getActivity(), ItemArticleActivity.class);
                 intent.putExtra("ITEM_TITLE", title);
                 startActivity(intent);
@@ -96,17 +138,20 @@ public class GeekNotesFragment extends Fragment {
                 switch (index) {
                     case 0:
                         listView.performItemClick(listView.getChildAt(i), i, listView.getItemIdAtPosition(i));
-//                        title = ((TextView) rootView.findViewById(R.id.name)).getText().toString();
-//                        Intent intent = new Intent(getActivity(), ItemArticleActivity.class);
-//                        intent.putExtra("ITEM_TITLE", title);
-//                        startActivity(intent);
                     case 1:
                         break;
                     case 2:
+                        TextView itemText = (TextView) listView.getChildAt(i).findViewById(R.id.name);
+                        String title = itemText.getText().toString();
                         dbHelper.deleteByTitle(title);
+                        Toast.makeText(getActivity(), "ID: " + title, Toast.LENGTH_SHORT).show();
                         Cursor c = dbHelper.getAllData();
                         c.requery();
-                        adapter.changeCursor(dbHelper.getAllData());
+                        if (filterSpinner.getSelectedItem().toString().equals("Все")) {
+                            adapter.changeCursor(dbHelper.getAllData());
+                        } else {
+                            adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
+                        }
                         adapter.notifyDataSetChanged();
                 }
                 return false;
@@ -128,6 +173,10 @@ public class GeekNotesFragment extends Fragment {
     private class ToolbarSpinnerAdapter extends BaseAdapter {
 
         private List<String> mItems = new ArrayList<>();
+
+        public void addItems(List<String> itemsList) {
+            mItems = itemsList;
+        }
 
         @Override
         public int getCount() {
