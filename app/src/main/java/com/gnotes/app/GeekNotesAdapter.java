@@ -61,7 +61,7 @@ public class GeekNotesAdapter extends CursorAdapter {
                 viewHolder.extraField.setText(cursor.getString(COL_GEEKNOTE_INFOTYPE));
                 viewHolder.extraInfo.setText(cursor.getString(COL_GEEKNOTE_INFO));
                 viewHolder.extraField.setVisibility(View.VISIBLE);
-                viewHolder.extraField.setVisibility(View.VISIBLE);
+                viewHolder.extraInfo.setVisibility(View.VISIBLE);
                 break;
         }
 

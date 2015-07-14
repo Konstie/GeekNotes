@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
@@ -37,6 +38,10 @@ public class GeekNotesFragment extends Fragment {
     private Toolbar toolbar;
     private Spinner filterSpinner;
     private SwipeMenuListView listView;
+
+    private TextView mTextField;
+    private EditText mEditTitle;
+    private EditText mEditInfo;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -135,24 +140,73 @@ public class GeekNotesFragment extends Fragment {
         listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int i, SwipeMenu swipeMenu, int index) {
+                TextView itemText = (TextView) listView.getChildAt(i).findViewById(R.id.name);
+                final String itemTitle = itemText.getText().toString();
                 switch (index) {
                     case 0:
                         listView.performItemClick(listView.getChildAt(i), i, listView.getItemIdAtPosition(i));
+                        break;
                     case 1:
+                        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                                .title("Изменить заметку")
+                                .customView(R.layout.change_item_dialog, true)
+                                .positiveText("Сохранить")
+                                .negativeText("Отменить")
+                                .callback(new MaterialDialog.ButtonCallback() {
+                                    @Override
+                                    public void onPositive(MaterialDialog dialog) {
+                                        String title, info;
+                                        title = mEditTitle.getText().toString();
+                                        info = mEditInfo.getText().toString();
+                                        dbHelper.updateData(itemTitle, title, info);
+
+                                        if (filterSpinner.getSelectedItem().toString().equals("Все")) {
+                                            adapter.changeCursor(dbHelper.getAllData());
+                                        } else {
+                                            adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onNegative(MaterialDialog dialog) {
+
+                                    }
+                                }).build();
+
+                        mEditTitle = (EditText) dialog.getCustomView().findViewById(R.id.edit_title);
+                        mEditTitle.setText(itemTitle);
+
+                        mTextField = (TextView) dialog.getCustomView().findViewById(R.id.edit_fieldname);
+                        TextView itemExtraField = (TextView) listView.getChildAt(i).findViewById(R.id.extra_type);
+                        String extraField = itemExtraField.getText().toString();
+                        if (extraField.equals("")) {
+                            mTextField.setText("");
+                        } else {
+                            mTextField.setText(extraField);
+                        }
+
+                        String extraValue = ((TextView) listView.getChildAt(i).findViewById(R.id.extra_info))
+                                .getText().toString();
+
+                        mEditInfo = (EditText) dialog.getCustomView().findViewById(R.id.edit_info);
+                        mEditInfo.setText(extraValue);
+
+                        dialog.show();
                         break;
                     case 2:
-                        TextView itemText = (TextView) listView.getChildAt(i).findViewById(R.id.name);
-                        String title = itemText.getText().toString();
-                        dbHelper.deleteByTitle(title);
-                        Toast.makeText(getActivity(), "ID: " + title, Toast.LENGTH_SHORT).show();
-                        Cursor c = dbHelper.getAllData();
-                        c.requery();
+//                        TextView itemText = (TextView) listView.getChildAt(i).findViewById(R.id.name);
+//                        String itemTitle = itemText.getText().toString();
+                        dbHelper.deleteByTitle(itemTitle);
+                        Toast.makeText(getActivity(), "ID: " + itemTitle, Toast.LENGTH_SHORT).show();
+
                         if (filterSpinner.getSelectedItem().toString().equals("Все")) {
                             adapter.changeCursor(dbHelper.getAllData());
                         } else {
                             adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
                         }
                         adapter.notifyDataSetChanged();
+                        break;
                 }
                 return false;
             }
