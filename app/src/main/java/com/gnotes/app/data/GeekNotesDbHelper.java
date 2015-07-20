@@ -91,6 +91,7 @@ public class GeekNotesDbHelper {
                     GeekNotesContract.GeekEntry.COLUMN_INFOTYPE + " TEXT, " +
                     GeekNotesContract.GeekEntry.COLUMN_INFO + " TEXT, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO + " TEXT, " +
+                    GeekNotesContract.GeekEntry.COLUMN_TRANSLATION + " TEXT, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_RANK + " REAL, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_INFO + " TEXT, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_POSTERLINK + " TEXT);";

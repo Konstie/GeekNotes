@@ -32,6 +32,8 @@ public class GeekNotesContract {
         public static final String COLUMN_INFOTYPE = "infotype";
         public static final String COLUMN_INFO = "fieldinfo";
 
+        public static final String COLUMN_TRANSLATION = "translation";
+
         public static final String COLUMN_ARTICLE_INFO = "article_info";
         public static final String COLUMN_ARTICLE_RANK = "rank";
         public static final String COLUMN_ARTICLE_IMDB_INFO = "imdb_info";

@@ -67,16 +67,6 @@ public class ItemArticleFragment extends Fragment
         Intent intent = getActivity().getIntent();
         mToolbarTitle = intent.getStringExtra("ITEM_TITLE");
         mCategory = intent.getStringExtra("ITEM_CAT");
-
-        IntentFilter wikiFilter = new IntentFilter(WikiReceiver.ACTION_WIKI_RESP);
-        wikiFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        wikiReceiver = new WikiReceiver();
-        getActivity().registerReceiver(wikiReceiver, wikiFilter);
-
-        IntentFilter imdbFilter = new IntentFilter(ImdbReceiver.ACTION_IMDB_RESP);
-        imdbFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        imdbReceiver = new ImdbReceiver();
-        getActivity().registerReceiver(imdbReceiver, imdbFilter);
     }
 
     @Override
@@ -113,6 +103,26 @@ public class ItemArticleFragment extends Fragment
         searchButton.invalidate();
         searchButton.bringToFront();
 
+        if (savedInstanceState != null) {
+            mPlot = savedInstanceState.getString("WIKI_INFO");
+            mImdbRating = savedInstanceState.getString("IMDB_RATING");
+            mImdbPosterLink = savedInstanceState.getString("IMDB_POSTER");
+            mImdbPlot = savedInstanceState.getString("IMDB_PLOT");
+
+            tvInfo.setText(mPlot);
+            tvInfo.setVisibility(View.VISIBLE);
+            tvRating.setText("Рейтинг IMDB: " + mImdbRating);
+            tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
+            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null)) {
+                Log.w("IMDB Tag", mImdbPosterLink);
+                Picasso.with(getActivity())
+                        .load(mImdbPosterLink)
+                        .into(imgThumbnail);
+            } else {
+                imgThumbnail.setImageResource(R.drawable.bg_tardis);
+            }
+        }
+
         return rootView;
     }
 
@@ -137,6 +147,16 @@ public class ItemArticleFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
+
+        IntentFilter wikiFilter = new IntentFilter(WikiReceiver.ACTION_WIKI_RESP);
+        wikiFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        wikiReceiver = new WikiReceiver();
+        getActivity().registerReceiver(wikiReceiver, wikiFilter);
+
+        IntentFilter imdbFilter = new IntentFilter(ImdbReceiver.ACTION_IMDB_RESP);
+        imdbFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        imdbReceiver = new ImdbReceiver();
+        getActivity().registerReceiver(imdbReceiver, imdbFilter);
 
         startFetchingInfo();
     }
@@ -214,16 +234,21 @@ public class ItemArticleFragment extends Fragment
         if ((mCategory.equals("Фильм") || mCategory.equals("Сериал") ||
                 mCategory.equals("Мультсериал") || mCategory.equals("Мультфильм") ||
                 mCategory.equals("Аниме"))) {
-            if (mImdbPlot == null) {
+            if (mImdbPlot == null || mImdbPlot.equals("")) {
                 updateImdbInfo();
+            } else {
+                tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
+                tvRating.setText("Рейтинг (IMDB): " + mImdbRating);
+                tvImdbPlot.setVisibility(View.VISIBLE);
+                tvRating.setVisibility(View.VISIBLE);
             }
 
-            if (mPlot == null) {
+            if (mPlot == null || mPlot.equals("")) {
                 updateWikiInfo();
             }
         } else if ((mPlot == null || !mPlot.equals("")) && (mCategory.equals("Книга") || mCategory.equals("Комикс") ||
                 mCategory.equals("Муз. исполнитель") || mCategory.equals("Игра"))) {
-            if (mPlot == null) {
+            if (mPlot == null || mPlot.equals("")) {
                 updateWikiInfo();
             }
         }
@@ -244,10 +269,25 @@ public class ItemArticleFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        getActivity().unregisterReceiver(wikiReceiver);
-        getActivity().unregisterReceiver(imdbReceiver);
+    public void onStop() {
+        super.onStop();
+        if (wikiReceiver != null) {
+            getActivity().unregisterReceiver(wikiReceiver);
+            wikiReceiver = null;
+        }
 
-        super.onDestroy();
+        if (imdbReceiver != null) {
+            getActivity().unregisterReceiver(imdbReceiver);
+            imdbReceiver = null;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("WIKI_INFO", mPlot);
+        outState.putString("IMDB_RATING", mImdbRating);
+        outState.putString("IMDB_POSTER", mImdbPosterLink);
+        outState.putString("IMDB_PLOT", mImdbPlot);
     }
 }
