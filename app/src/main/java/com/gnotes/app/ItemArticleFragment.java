@@ -1,14 +1,11 @@
 package com.gnotes.app;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
+import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,29 +18,14 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.gnotes.app.data.GeekNotesContract;
 import com.gnotes.app.data.GeekNotesDbHelper;
 import com.gnotes.app.services.GeekNotesImdbService;
 import com.gnotes.app.services.GeekNotesWikiService;
 import com.nineoldandroids.view.ViewHelper;
 import com.squareup.picasso.Picasso;
 
-import java.util.Objects;
-
 public class ItemArticleFragment extends Fragment
         implements ObservableScrollViewCallbacks {
-
-    private static final String[] GEEKNOTES_COLUMNS = {
-            GeekNotesContract.GeekEntry.TABLE_NAME + "." + GeekNotesContract.GeekEntry._ID,
-            GeekNotesContract.GeekEntry.COLUMN_TITLE,
-            GeekNotesContract.GeekEntry.COLUMN_CATEGORY,
-            GeekNotesContract.GeekEntry.COLUMN_INFOTYPE,
-            GeekNotesContract.GeekEntry.COLUMN_INFO,
-            GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO,
-            GeekNotesContract.GeekEntry.COLUMN_ARTICLE_RANK,
-            GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_INFO,
-            GeekNotesContract.GeekEntry.COLUMN_ARTICLE_POSTERLINK
-    };
 
     static final int COL_GEEKNOTE_ID = 0;
     static final int COL_GEEKNOTE_TITLE = 1;
@@ -56,17 +38,23 @@ public class ItemArticleFragment extends Fragment
     static final int COL_GEEKNOTE_POSTERLINK = 8;
 
     private View mToolbarView;
-    private ObservableScrollView mScrollView;
     private ImageButton searchButton;
     private int mParallaxImageHeight;
 
-    private String toolbarTitle = "";
-    private String category, plot, imdbPlot, imdbRating, imdbPosterLink;
+    private String mToolbarTitle = "";
+    private String mCategory;
+    private String mPlot;
+    private String mImdbPlot;
+    private String mImdbRating;
+    private String mImdbPosterLink;
 
     private TextView tvInfo;
     private TextView tvRating;
     private TextView tvImdbPlot;
     private ImageView imgThumbnail;
+
+    private WikiReceiver wikiReceiver;
+    private ImdbReceiver imdbReceiver;
     private GeekNotesDbHelper dbHelper;
 
     @Override
@@ -77,7 +65,18 @@ public class ItemArticleFragment extends Fragment
         dbHelper = new GeekNotesDbHelper(getActivity());
 
         Intent intent = getActivity().getIntent();
-        toolbarTitle = intent.getStringExtra("ITEM_TITLE");
+        mToolbarTitle = intent.getStringExtra("ITEM_TITLE");
+        mCategory = intent.getStringExtra("ITEM_CAT");
+
+        IntentFilter wikiFilter = new IntentFilter(WikiReceiver.ACTION_WIKI_RESP);
+        wikiFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        wikiReceiver = new WikiReceiver();
+        getActivity().registerReceiver(wikiReceiver, wikiFilter);
+
+        IntentFilter imdbFilter = new IntentFilter(ImdbReceiver.ACTION_IMDB_RESP);
+        imdbFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        imdbReceiver = new ImdbReceiver();
+        getActivity().registerReceiver(imdbReceiver, imdbFilter);
     }
 
     @Override
@@ -86,10 +85,13 @@ public class ItemArticleFragment extends Fragment
                              final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_article_fragment, parent, false);
 
-                ((ItemArticleActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar_article));
-        // ((ItemArticleActivity) getActivity()).getSupportActionBar().setLogo(getResources().getDrawable(R.drawable.tardis_icon));
-        ((ItemArticleActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((ItemArticleActivity) getActivity()).getSupportActionBar().setTitle(toolbarTitle);
+        ((ItemArticleActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar_article));
+        ActionBar actionBar = ((ItemArticleActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            // actionBar.setLogo(getResources().getDrawable(R.drawable.tardis_icon));
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(mToolbarTitle);
+        }
 
         imgThumbnail = (ImageView) rootView.findViewById(R.id.image);
         imgThumbnail.bringToFront();
@@ -98,7 +100,7 @@ public class ItemArticleFragment extends Fragment
         mToolbarView = rootView.findViewById(R.id.toolbar_article);
         mToolbarView.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, getResources().getColor(R.color.primary)));
 
-        mScrollView = (ObservableScrollView) rootView.findViewById(R.id.scroll);
+        ObservableScrollView mScrollView = (ObservableScrollView) rootView.findViewById(R.id.scroll);
         mScrollView.setScrollViewCallbacks(this);
 
         mParallaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
@@ -115,29 +117,116 @@ public class ItemArticleFragment extends Fragment
     }
 
     @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) { // handling header scroll
         int baseColor = getResources().getColor(R.color.primary);
         float alpha = 1 - (float) Math.max(0, mParallaxImageHeight - scrollY) / mParallaxImageHeight;
         mToolbarView.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
         ViewHelper.setTranslationY(imgThumbnail, scrollY / 2);
     }
 
-    public void updateWikiInfo() {
-        Log.w("Wiki articles service", "Updating info...");
-        Intent alarmIntent = new Intent(getActivity(), GeekNotesWikiService.AlarmReceiver.class);
-        alarmIntent.putExtra("ITEM_TITLE", toolbarTitle);
-        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
+    @Override
+    public void onDownMotionEvent() {
+        // nothing to do here
     }
 
-    public void updateImdbInfo() {
-        Log.w("IMDB Service", "IMDB Service launched!");
-        Intent alarmIntent = new Intent(getActivity(), GeekNotesImdbService.AlarmReceiver.class);
-        alarmIntent.putExtra("ITEM_TITLE", toolbarTitle);
-        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pi);
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+        // nothing to do here
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        startFetchingInfo();
+    }
+
+    public class WikiReceiver extends BroadcastReceiver {
+        public static final String ACTION_WIKI_RESP = "com.gnotes.app.action.IMDB_READ";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Cursor cursor = dbHelper.getSpecificNote(mToolbarTitle);
+
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    mPlot = (cursor.getString(COL_GEEKNOTE_ARTICLE_INFO) != null) ?
+                            cursor.getString(COL_GEEKNOTE_ARTICLE_INFO) : "";
+
+                    if (!mPlot.equals("") && mPlot != null) {
+                        tvInfo.setVisibility(View.VISIBLE);
+                        tvInfo.setText(mPlot);
+                    }
+                }
+            }
+        }
+    }
+
+    public class ImdbReceiver extends BroadcastReceiver {
+        public static final String ACTION_IMDB_RESP = "com.gnotes.app.action.IMDB_READ";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Cursor cursor = dbHelper.getSpecificNote(mToolbarTitle);
+
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    mImdbPlot = (cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO) != null)
+                            ? cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO) : "";
+                    mImdbRating = (cursor.getString(COL_GEEKNOTE_ARTICLE_RANK) != null)
+                            ? cursor.getString(COL_GEEKNOTE_ARTICLE_RANK) : "";
+                    mImdbPosterLink = (cursor.getString(COL_GEEKNOTE_POSTERLINK) != null)
+                            ? cursor.getString(COL_GEEKNOTE_POSTERLINK) : "";
+
+                    if (!mImdbPlot.equals("") && mImdbPlot != null) {
+                        tvImdbPlot.setVisibility(View.VISIBLE);
+                        tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
+                        tvRating.setVisibility(View.VISIBLE);
+                        tvRating.setText("Рейтинг IMDB: " + mImdbRating);
+                    }
+                }
+            }
+
+            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null)) {
+                Log.w("IMDB Tag", mImdbPosterLink);
+                Picasso.with(getActivity())
+                        .load(mImdbPosterLink)
+                        .into(imgThumbnail);
+            } else {
+                imgThumbnail.setImageResource(R.drawable.bg_tardis);
+            }
+        }
+    }
+
+    private void updateWikiInfo() { // starts connection to wikipedia
+        Intent wikiArticleIntent = new Intent(getActivity(), GeekNotesWikiService.class);
+        wikiArticleIntent.putExtra("ITEM_TITLE", mToolbarTitle);
+        getActivity().startService(wikiArticleIntent);
+    }
+
+    private void updateImdbInfo() { // starts connection to IMDB servers
+        Intent imdbIntent = new Intent(getActivity(), GeekNotesImdbService.class);
+        imdbIntent.putExtra("ITEM_TITLE", mToolbarTitle);
+        getActivity().startService(imdbIntent);
+    }
+
+    private void startFetchingInfo() {
+        if ((mCategory.equals("Фильм") || mCategory.equals("Сериал") ||
+                mCategory.equals("Мультсериал") || mCategory.equals("Мультфильм") ||
+                mCategory.equals("Аниме"))) {
+            if (mImdbPlot == null) {
+                updateImdbInfo();
+            }
+
+            if (mPlot == null) {
+                updateWikiInfo();
+            }
+        } else if ((mPlot == null || !mPlot.equals("")) && (mCategory.equals("Книга") || mCategory.equals("Комикс") ||
+                mCategory.equals("Муз. исполнитель") || mCategory.equals("Игра"))) {
+            if (mPlot == null) {
+                updateWikiInfo();
+            }
+        }
     }
 
     @Override
@@ -147,73 +236,18 @@ public class ItemArticleFragment extends Fragment
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uriUrl = Uri.parse("");
+                Uri uriUrl = Uri.parse("http://www.google.com.my/search?q=" + mToolbarTitle);
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
                 startActivity(launchBrowser);
             }
         });
-
-        Cursor cursor = dbHelper.getSpecificNote(toolbarTitle);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                plot = cursor.getString(COL_GEEKNOTE_ARTICLE_INFO);
-                imdbPlot = (cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO) != null)
-                        ? cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO) : "";
-                imdbRating = (cursor.getString(COL_GEEKNOTE_ARTICLE_RANK) != null)
-                        ? cursor.getString(COL_GEEKNOTE_ARTICLE_RANK) : "";
-                imdbPosterLink = (cursor.getString(COL_GEEKNOTE_POSTERLINK) != null)
-                        ? cursor.getString(COL_GEEKNOTE_POSTERLINK) : "";
-            }
-        }
-
-        if (!imdbPosterLink.equals("")) {
-            Log.w("IMDB Tag", imdbPosterLink);
-            Picasso.with(getActivity())
-                    .load(imdbPosterLink)
-                    .into(imgThumbnail);
-        }
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                plot = cursor.getString(COL_GEEKNOTE_ARTICLE_INFO);
-                category = cursor.getString(COL_GEEKNOTE_CATEGORY);
-                if ((plot == null || !plot.equals("")) && (category.equals("Фильм") || category.equals("Сериал") ||
-                        category.equals("Мультсериал") || category.equals("Мультфильм") ||
-                        category.equals("Аниме"))) {
-                    updateWikiInfo();
-                    updateImdbInfo();
-                } else if ((plot == null || !plot.equals("")) && (category.equals("Книга") || category.equals("Комикс") ||
-                        category.equals("Муз. исполнитель") || category.equals("Игра"))) {
-                    updateWikiInfo();
-                }
-            }
-        }
-
-        if (plot != null && !plot.equals("")) {
-            tvInfo.setVisibility(View.VISIBLE);
-            tvInfo.setText(plot);
-        }
-
-        if (!imdbPlot.equals("") && !imdbRating.equals("")) {
-            tvImdbPlot.setVisibility(View.VISIBLE);
-            tvRating.setVisibility(View.VISIBLE);
-            tvRating.append(imdbRating);
-            tvImdbPlot.append(imdbPlot);
-        } else {
-            tvImdbPlot.setVisibility(View.GONE);
-            tvRating.setVisibility(View.GONE);
-        }
     }
 
     @Override
-    public void onDownMotionEvent() {
+    public void onDestroy() {
+        getActivity().unregisterReceiver(wikiReceiver);
+        getActivity().unregisterReceiver(imdbReceiver);
 
+        super.onDestroy();
     }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-
-    }
-
 }

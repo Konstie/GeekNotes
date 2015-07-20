@@ -1,12 +1,11 @@
 package com.gnotes.app.services;
 
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import com.gnotes.app.ItemArticleFragment;
 import com.gnotes.app.data.GeekNotesContract;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +22,7 @@ public class GeekNotesWikiService extends IntentService {
 
     private static final String TAG = "GeekNotes Wiki Service";
 
-    String itemTitle;
+    private String plot = "";
 
     public GeekNotesWikiService() {
         super(TAG);
@@ -31,20 +30,21 @@ public class GeekNotesWikiService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        itemTitle = intent.getStringExtra("ITEM_TITLE");
+        String itemTitle = intent.getStringExtra("ITEM_TITLE");
 
         String wikiArticleJsonStr = connectToWiki(itemTitle);
-        try {
-            getWikiArticle(wikiArticleJsonStr);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        getWikiArticle(itemTitle, wikiArticleJsonStr);
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(ItemArticleFragment.ImdbReceiver.ACTION_IMDB_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        sendBroadcast(broadcastIntent);
     }
 
     private String connectToWiki(String itemTitle) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         String format = "json";
         String action = "query";
@@ -52,7 +52,7 @@ public class GeekNotesWikiService extends IntentService {
 
         try {
             final String WIKI_BASE_URL_RU = "https://ru.wikipedia.org/w/api.php?";
-            final String WIKI_BASE_URL_EN = "https://en.wikipedia.org/w/api.php?";
+            // final String WIKI_BASE_URL_EN = "https://en.wikipedia.org/w/api.php?";
 
             final String WIKI_PARAM_FORMAT = "format";
             final String WIKI_PARAM_ACTION = "action";
@@ -87,7 +87,7 @@ public class GeekNotesWikiService extends IntentService {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
+                buffer.append(line).append("\n");
             }
 
             if (buffer.length() == 0) {
@@ -111,8 +111,7 @@ public class GeekNotesWikiService extends IntentService {
         return buffer.toString();
     }
 
-
-    private void getWikiArticle(String wikiArticleJsonStr) throws JSONException {
+    private void getWikiArticle(String originalTitle, String wikiArticleJsonStr) {
         final String GN_QUERY = "query";
         final String GN_PAGES = "pages";
         final String GN_PAGEID = "pageid";
@@ -125,9 +124,7 @@ public class GeekNotesWikiService extends IntentService {
             JSONObject pages = query.getJSONObject(GN_PAGES);
             JSONObject nestedObject = null;
 
-            String plot = "";
-
-            Iterator keys = pages.keys();
+            Iterator keys = pages.keys(); // iterate through wiki-pages ids
 
             while (keys.hasNext()) {
                 String currentDynamicKey = (String) keys.next();
@@ -139,8 +136,7 @@ public class GeekNotesWikiService extends IntentService {
             if (nestedObject != null) {
                 String tempPlot = nestedObject.getString(GN_EXTRACT);
                 plot = ((tempPlot) != null && !tempPlot.equals("")) ? tempPlot
-                        : "К сожалению, на Википедии ничего об этом не написано. Попробуйте" +
-                        " воспользоваться функцией поиска в гугле или изменить название.";
+                        : "";
             }
 
             Log.w("TAAAAAAAAAAAAAAAG Plot", plot);
@@ -149,21 +145,10 @@ public class GeekNotesWikiService extends IntentService {
             noteValues.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO, plot);
 
             getContentResolver().update(GeekNotesContract.GeekEntry.CONTENT_URI, noteValues,
-                    GeekNotesContract.GeekEntry.COLUMN_TITLE + "=?", new String[] {itemTitle});
+                    GeekNotesContract.GeekEntry.COLUMN_TITLE + "=?", new String[] {originalTitle});
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage(), e);
             e.printStackTrace();
-        }
-    }
-
-    public static class AlarmReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String title = intent.getStringExtra("ITEM_TITLE");
-            Intent sendIntent = new Intent(context, GeekNotesWikiService.class);
-            sendIntent.putExtra("ITEM_TITLE", title);
-            context.startService(sendIntent);
         }
     }
 }

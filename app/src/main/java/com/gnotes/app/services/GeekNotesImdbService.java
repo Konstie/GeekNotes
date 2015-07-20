@@ -1,12 +1,11 @@
 package com.gnotes.app.services;
 
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import com.gnotes.app.ItemArticleFragment;
 import com.gnotes.app.data.GeekNotesContract;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +31,11 @@ public class GeekNotesImdbService extends IntentService {
 
         String imdbJsonStr = connectToImdb(itemTitle);
         getImdbStuff(itemTitle, imdbJsonStr);
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(ItemArticleFragment.ImdbReceiver.ACTION_IMDB_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        sendBroadcast(broadcastIntent);
     }
 
     private String connectToImdb(String itemTitle) {
@@ -130,17 +134,6 @@ public class GeekNotesImdbService extends IntentService {
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage(), e);
             e.printStackTrace();
-        }
-    }
-
-    public static class AlarmReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String title = intent.getStringExtra("ITEM_TITLE");
-            Intent sendIntent = new Intent(context, GeekNotesImdbService.class);
-            sendIntent.putExtra("ITEM_TITLE", title);
-            context.startService(sendIntent);
         }
     }
 }

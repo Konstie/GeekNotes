@@ -104,8 +104,10 @@ public class GeekNotesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String title = ((TextView) view.findViewById(R.id.name)).getText().toString();
+                String category = ((TextView) view.findViewById(R.id.category)).getText().toString();
                 Intent intent = new Intent(getActivity(), ItemArticleActivity.class);
                 intent.putExtra("ITEM_TITLE", title);
+                intent.putExtra("ITEM_CAT", category);
                 startActivity(intent);
             }
         });
@@ -140,13 +142,13 @@ public class GeekNotesFragment extends Fragment {
         listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int i, SwipeMenu swipeMenu, int index) {
-                TextView itemText = (TextView) listView.getChildAt(i).findViewById(R.id.name);
+                TextView itemText = (TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.name);
                 final String itemTitle = itemText.getText().toString();
                 switch (index) {
-                    case 0:
+                    case 0: // performing current item selection in order to look its' info up
                         listView.performItemClick(listView.getChildAt(i), i, listView.getItemIdAtPosition(i));
                         break;
-                    case 1:
+                    case 1: // item edit dialog call
                         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                                 .title("Изменить заметку")
                                 .customView(R.layout.change_item_dialog, true)
@@ -178,7 +180,7 @@ public class GeekNotesFragment extends Fragment {
                         mEditTitle.setText(itemTitle);
 
                         mTextField = (TextView) dialog.getCustomView().findViewById(R.id.edit_fieldname);
-                        TextView itemExtraField = (TextView) listView.getChildAt(i).findViewById(R.id.extra_type);
+                        TextView itemExtraField = (TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.extra_type);
                         String extraField = itemExtraField.getText().toString();
                         if (extraField.equals("")) {
                             mTextField.setText("");
@@ -186,7 +188,7 @@ public class GeekNotesFragment extends Fragment {
                             mTextField.setText(extraField);
                         }
 
-                        String extraValue = ((TextView) listView.getChildAt(i).findViewById(R.id.extra_info))
+                        String extraValue = ((TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.extra_info))
                                 .getText().toString();
 
                         mEditInfo = (EditText) dialog.getCustomView().findViewById(R.id.edit_info);
@@ -194,11 +196,9 @@ public class GeekNotesFragment extends Fragment {
 
                         dialog.show();
                         break;
-                    case 2:
-//                        TextView itemText = (TextView) listView.getChildAt(i).findViewById(R.id.name);
-//                        String itemTitle = itemText.getText().toString();
+                    case 2: // remove item option
                         dbHelper.deleteByTitle(itemTitle);
-                        Toast.makeText(getActivity(), "ID: " + itemTitle, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Заметка «" + itemTitle + "» удалена", Toast.LENGTH_SHORT).show();
 
                         if (filterSpinner.getSelectedItem().toString().equals("Все")) {
                             adapter.changeCursor(dbHelper.getAllData());
@@ -217,14 +217,14 @@ public class GeekNotesFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newNoteIntent = new Intent(getActivity(), NewNoteActivity.class);
+                Intent newNoteIntent = new Intent(getActivity(), NewNoteActivity.class); // call new note activity
                 startActivity(newNoteIntent);
             }
         });
         return rootView;
     }
 
-    private class ToolbarSpinnerAdapter extends BaseAdapter {
+    private class ToolbarSpinnerAdapter extends BaseAdapter { // filtering feature adapter
 
         private List<String> mItems = new ArrayList<>();
 
@@ -277,7 +277,7 @@ public class GeekNotesFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
+    public void onResume() { // update list elements immediately
         super.onResume();
 
         Cursor c = dbHelper.getAllData();
