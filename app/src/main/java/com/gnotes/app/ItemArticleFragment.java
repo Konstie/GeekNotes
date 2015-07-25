@@ -2,6 +2,8 @@ package com.gnotes.app;
 
 import android.content.*;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -110,7 +112,7 @@ public class ItemArticleFragment extends Fragment
             mImdbPlot = savedInstanceState.getString("IMDB_PLOT");
 
             tvInfo.setText(mPlot);
-            tvInfo.setVisibility(View.VISIBLE);
+            // tvInfo.setVisibility(View.VISIBLE);
             tvRating.setText("Рейтинг IMDB: " + mImdbRating);
             tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
             if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null)) {
@@ -158,7 +160,7 @@ public class ItemArticleFragment extends Fragment
         imdbReceiver = new ImdbReceiver();
         getActivity().registerReceiver(imdbReceiver, imdbFilter);
 
-        startFetchingInfo();
+        showInfo();
     }
 
     public class WikiReceiver extends BroadcastReceiver {
@@ -207,7 +209,7 @@ public class ItemArticleFragment extends Fragment
                 }
             }
 
-            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null)) {
+            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null || canEnslaveTheWorld())) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
                         .load(mImdbPosterLink)
@@ -230,7 +232,7 @@ public class ItemArticleFragment extends Fragment
         getActivity().startService(imdbIntent);
     }
 
-    private void startFetchingInfo() {
+    private void showInfo() {
         if ((mCategory.equals("Фильм") || mCategory.equals("Сериал") ||
                 mCategory.equals("Мультсериал") || mCategory.equals("Мультфильм") ||
                 mCategory.equals("Аниме"))) {
@@ -252,6 +254,13 @@ public class ItemArticleFragment extends Fragment
                 updateWikiInfo();
             }
         }
+    }
+    
+    private boolean canEnslaveTheWorld() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo nInfo = connectivityManager.getActiveNetworkInfo();
+        return nInfo != null && nInfo.isConnected();
     }
 
     @Override

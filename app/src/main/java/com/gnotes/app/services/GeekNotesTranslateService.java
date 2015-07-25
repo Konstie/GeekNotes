@@ -22,7 +22,6 @@ import java.util.Iterator;
 public class GeekNotesTranslateService extends IntentService {
     private static final String TAG = "GN Translate Service";
 
-    private String plot = "";
     private String engTranlation = "";
 
     public GeekNotesTranslateService() {
