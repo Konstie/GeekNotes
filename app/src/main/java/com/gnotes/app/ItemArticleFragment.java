@@ -35,17 +35,18 @@ public class ItemArticleFragment extends Fragment
     static final int COL_GEEKNOTE_INFOTYPE = 3;
     static final int COL_GEEKNOTE_INFO = 4;
     static final int COL_GEEKNOTE_ARTICLE_INFO = 5;
-    static final int COL_GEEKNOTE_ARTICLE_RANK = 6;
-    static final int COL_GEEKNOTE_ARTICLE_IMDB_INFO = 7;
-    static final int COL_GEEKNOTE_POSTERLINK = 8;
+    static final int COL_GEEKNOTE_ARTICLE_RANK = 7;
+    static final int COL_GEEKNOTE_ARTICLE_IMDB_INFO = 8;
+    static final int COL_GEEKNOTE_POSTERLINK = 9;
 
     private View mToolbarView;
     private ImageButton searchButton;
     private int mParallaxImageHeight;
 
-    private String mToolbarTitle = "";
+    private String mItemTitle = "";
     private String mCategory;
     private String mPlot;
+    private String mTranslation;
     private String mImdbPlot;
     private String mImdbRating;
     private String mImdbPosterLink;
@@ -67,8 +68,10 @@ public class ItemArticleFragment extends Fragment
         dbHelper = new GeekNotesDbHelper(getActivity());
 
         Intent intent = getActivity().getIntent();
-        mToolbarTitle = intent.getStringExtra("ITEM_TITLE");
+        mItemTitle = intent.getStringExtra("ITEM_TITLE");
         mCategory = intent.getStringExtra("ITEM_CAT");
+
+        mTranslation = mItemTitle;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class ItemArticleFragment extends Fragment
         if (actionBar != null) {
             // actionBar.setLogo(getResources().getDrawable(R.drawable.tardis_icon));
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(mToolbarTitle);
+            actionBar.setTitle(mItemTitle);
         }
 
         imgThumbnail = (ImageView) rootView.findViewById(R.id.image);
@@ -112,10 +115,12 @@ public class ItemArticleFragment extends Fragment
             mImdbPlot = savedInstanceState.getString("IMDB_PLOT");
 
             tvInfo.setText(mPlot);
-            // tvInfo.setVisibility(View.VISIBLE);
+            if (mPlot != null) {
+                tvInfo.setVisibility(View.VISIBLE);
+            }
             tvRating.setText("Рейтинг IMDB: " + mImdbRating);
             tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
-            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null)) {
+            if (!(mImdbPosterLink.equals("") || mImdbPosterLink != null)) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
                         .load(mImdbPosterLink)
@@ -168,7 +173,7 @@ public class ItemArticleFragment extends Fragment
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Cursor cursor = dbHelper.getSpecificNote(mToolbarTitle);
+            Cursor cursor = dbHelper.getSpecificNote(mItemTitle);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
@@ -189,7 +194,7 @@ public class ItemArticleFragment extends Fragment
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Cursor cursor = dbHelper.getSpecificNote(mToolbarTitle);
+            Cursor cursor = dbHelper.getSpecificNote(mItemTitle);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
@@ -209,7 +214,7 @@ public class ItemArticleFragment extends Fragment
                 }
             }
 
-            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null || canEnslaveTheWorld())) {
+            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null)) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
                         .load(mImdbPosterLink)
@@ -222,13 +227,13 @@ public class ItemArticleFragment extends Fragment
 
     private void updateWikiInfo() { // starts connection to wikipedia
         Intent wikiArticleIntent = new Intent(getActivity(), GeekNotesWikiService.class);
-        wikiArticleIntent.putExtra("ITEM_TITLE", mToolbarTitle);
+        wikiArticleIntent.putExtra("ITEM_TITLE", mItemTitle);
         getActivity().startService(wikiArticleIntent);
     }
 
     private void updateImdbInfo() { // starts connection to IMDB servers
         Intent imdbIntent = new Intent(getActivity(), GeekNotesImdbService.class);
-        imdbIntent.putExtra("ITEM_TITLE", mToolbarTitle);
+        imdbIntent.putExtra("ITEM_TITLE", mTranslation);
         getActivity().startService(imdbIntent);
     }
 
@@ -236,6 +241,7 @@ public class ItemArticleFragment extends Fragment
         if ((mCategory.equals("Фильм") || mCategory.equals("Сериал") ||
                 mCategory.equals("Мультсериал") || mCategory.equals("Мультфильм") ||
                 mCategory.equals("Аниме"))) {
+
             if (mImdbPlot == null || mImdbPlot.equals("")) {
                 updateImdbInfo();
             } else {
@@ -270,7 +276,7 @@ public class ItemArticleFragment extends Fragment
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uriUrl = Uri.parse("http://www.google.com.my/search?q=" + mToolbarTitle);
+                Uri uriUrl = Uri.parse("http://www.google.com.my/search?q=" + mItemTitle);
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
                 startActivity(launchBrowser);
             }
