@@ -152,7 +152,7 @@ public class GeekNotesImdbService extends IntentService {
 
             StringBuilder modifiedTranslation = new StringBuilder(engTranlation);
 
-            if (engTranlation.contains(" (")) {
+            if (engTranlation.contains(" (")) { // necessary for search query in imdb not to break
                 modifiedTranslation.replace(engTranlation.indexOf(" ("), engTranlation.length(), "");
                 Log.w("Translation service", modifiedTranslation.toString());
             }

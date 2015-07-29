@@ -120,7 +120,7 @@ public class ItemArticleFragment extends Fragment
             }
             tvRating.setText("Рейтинг IMDB: " + mImdbRating);
             tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
-            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null)) {
+            if (mImdbPosterLink != null && canEnslaveTheWorld()) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
                         .load(mImdbPosterLink)
@@ -214,7 +214,7 @@ public class ItemArticleFragment extends Fragment
                 }
             }
 
-            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null)) {
+            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null) && canEnslaveTheWorld()) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
                         .load(mImdbPosterLink)

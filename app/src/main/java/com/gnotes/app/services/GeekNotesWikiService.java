@@ -52,7 +52,6 @@ public class GeekNotesWikiService extends IntentService {
 
         try {
             final String WIKI_BASE_URL_RU = "https://ru.wikipedia.org/w/api.php?";
-            // final String WIKI_BASE_URL_EN = "https://en.wikipedia.org/w/api.php?";
 
             final String WIKI_PARAM_FORMAT = "format";
             final String WIKI_PARAM_ACTION = "action";

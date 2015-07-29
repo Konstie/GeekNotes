@@ -10,11 +10,6 @@ import android.util.Log;
 
 public class ItemArticleActivity extends AppCompatActivity {
 
-    public static final String AUTHORITY = "com.gnotes.app.notessync.provider";
-    public static final String ACCOUNT_TYPE = "gnotes.com";
-    public static final String ACCOUNT = "geeknotes_account";
-    private Account mAccount;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
