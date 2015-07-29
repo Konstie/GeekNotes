@@ -1,5 +1,6 @@
 package com.gnotes.app;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -119,18 +120,16 @@ public class GeekNotesActivity extends AppCompatActivity {
     }
 
     public void handleDrawerItems(RecyclerView rv, MotionEvent e, View child) {
-        Fragment fragment = null;
+
         switch (rv.getChildPosition(child)) {
-            case 0:
-                return;
             case 1:
+                Intent newNoteIntent = new Intent(this, NewNoteActivity.class); // call new note activity
+                startActivity(newNoteIntent);
                 break;
             case 2:
-                //fragment = new NewNoteFragment();
+                // TODO: Settings activity with all that stuff
                 break;
             case 3:
-                break;
-            case 4:
                 finish();
                 System.exit(0);
                 break;

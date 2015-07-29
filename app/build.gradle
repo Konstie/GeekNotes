@@ -23,7 +23,7 @@ repositories {
 repositories {
     mavenCentral()
     maven {
-        url 'http://clinker.47deg.com/nexus/content/groups/public'
+        url 'https://dl.bintray.com/drummer-aidan/maven'
     }
 }
 
@@ -54,6 +54,6 @@ dependencies {
     compile(name: 'fadingactionbar-3.1.2', ext:'aar')
     compile(name: 'android-observablescrollview-1.5.0', ext:'aar')
     compile(name: 'universal-image-loader-1.9.4', ext:'jar')
-    compile 'com.afollestad:material-dialogs:0.7.0.1'
+    compile(name: 'material-dialogs-0.7.7.0', ext:'aar')
     compile 'com.baoyz.swipemenulistview:library:1.1.0'
 }

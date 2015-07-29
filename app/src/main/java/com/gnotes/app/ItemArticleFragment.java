@@ -115,12 +115,12 @@ public class ItemArticleFragment extends Fragment
             mImdbPlot = savedInstanceState.getString("IMDB_PLOT");
 
             tvInfo.setText(mPlot);
-            if (mPlot != null) {
+            if (mPlot != null && !mPlot.equals("")) {
                 tvInfo.setVisibility(View.VISIBLE);
             }
             tvRating.setText("Рейтинг IMDB: " + mImdbRating);
             tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
-            if (mImdbPosterLink != null && canEnslaveTheWorld()) {
+            if (mImdbPosterLink != null && !mImdbPosterLink.equals("") && canEnslaveTheWorld()) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
                         .load(mImdbPosterLink)
