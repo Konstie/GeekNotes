@@ -2,8 +2,9 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".GeekNotesActivity">
-    <item android:id="@+id/action_settings"
-          android:title=""
+    <item android:id="@+id/action_delete_wiki"
+          android:title="Неправильное wiki-описание! Exterminate!"
+          android:icon="@mipmap/ic_action_delete"
           android:orderInCategory="100"
-          app:showAsAction="never"/>
+          app:showAsAction="always"/>
 </menu>

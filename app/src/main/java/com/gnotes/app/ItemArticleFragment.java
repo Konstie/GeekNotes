@@ -6,13 +6,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +26,8 @@ import com.gnotes.app.services.GeekNotesWikiService;
 import com.nineoldandroids.view.ViewHelper;
 import com.squareup.picasso.Picasso;
 
-public class ItemArticleFragment extends Fragment
+public class
+        ItemArticleFragment extends Fragment
         implements ObservableScrollViewCallbacks {
 
     static final int COL_GEEKNOTE_ID = 0;
@@ -65,6 +65,7 @@ public class ItemArticleFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
 
         dbHelper = new GeekNotesDbHelper(getActivity());
 
@@ -153,6 +154,26 @@ public class ItemArticleFragment extends Fragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_article, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete_wiki:
+                dbHelper.resetWikipediaArticlePlot(mItemTitle);
+                tvInfo.setVisibility(View.GONE);
+                Snackbar.make(getView(), "Wiki-описание для заметки «" + mItemTitle +
+                        "» было удалено", Snackbar.LENGTH_SHORT).show();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -181,7 +202,7 @@ public class ItemArticleFragment extends Fragment
                     mPlot = (cursor.getString(COL_GEEKNOTE_ARTICLE_INFO) != null) ?
                             cursor.getString(COL_GEEKNOTE_ARTICLE_INFO) : "";
 
-                    if (!mPlot.equals("") && mPlot != null) {
+                    if (!mPlot.equals("") && mPlot != null && !mPlot.equals("42. Просто 42.")) {
                         tvInfo.setVisibility(View.VISIBLE);
                         tvInfo.setText(mPlot);
                     }
@@ -215,14 +236,18 @@ public class ItemArticleFragment extends Fragment
                 }
             }
 
-            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null) && isOnline()) {
-                Log.w("IMDB Tag", mImdbPosterLink);
-                Picasso.with(getActivity())
-                        .load(mImdbPosterLink)
-                        .into(imgThumbnail);
-            } else {
-                imgThumbnail.setImageResource(R.drawable.bg_tardis);
-            }
+            updatePoster();
+        }
+    }
+
+    private void updatePoster() {
+        if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null) && isOnline()) {
+            Log.w("IMDB Tag", mImdbPosterLink);
+            Picasso.with(getActivity())
+                    .load(mImdbPosterLink)
+                    .into(imgThumbnail);
+        } else {
+            imgThumbnail.setImageResource(R.drawable.bg_tardis);
         }
     }
 
@@ -239,27 +264,54 @@ public class ItemArticleFragment extends Fragment
     }
 
     private void showInfo() {
-        if ((mCategory.equals("Фильм") || mCategory.equals("Сериал") ||
-                mCategory.equals("Мультсериал") || mCategory.equals("Мультфильм") ||
-                mCategory.equals("Аниме"))) {
+        Cursor cursor = dbHelper.getSpecificNote(mItemTitle);
 
-            if (mImdbPlot == null || mImdbPlot.equals("")) {
-                updateImdbInfo();
-            } else {
-                tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
-                tvRating.setText("Рейтинг (IMDB): " + mImdbRating);
-                tvImdbPlot.setVisibility(View.VISIBLE);
-                tvRating.setVisibility(View.VISIBLE);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                mPlot = cursor.getString(COL_GEEKNOTE_ARTICLE_INFO);
+                mImdbPlot = cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO);
+                mImdbRating = cursor.getString(COL_GEEKNOTE_ARTICLE_RANK);
+                mImdbPosterLink = cursor.getString(COL_GEEKNOTE_POSTERLINK);
             }
+        }
 
-            if (mPlot == null || mPlot.equals("")) {
-                updateWikiInfo();
-            }
-        } else if ((mPlot == null || !mPlot.equals("")) && (mCategory.equals("Книга") || mCategory.equals("Комикс") ||
-                mCategory.equals("Муз. исполнитель") || mCategory.equals("Игра"))) {
-            if (mPlot == null || mPlot.equals("")) {
-                updateWikiInfo();
-            }
+        switch (mCategory) {
+            case "Фильм":
+            case "Сериал":
+            case "Мультсериал":
+            case "Мультфильм":
+            case "Аниме":
+                if (mImdbPlot == null || mImdbPlot.equals("")) {
+                    updateImdbInfo();
+                } else {
+                    tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
+                    tvRating.setText("Рейтинг IMDB: " + mImdbRating);
+                    tvImdbPlot.setVisibility(View.VISIBLE);
+                    tvRating.setVisibility(View.VISIBLE);
+                }
+
+                if (mPlot == null || mPlot.equals("") && !mPlot.equals("42. Просто 42.")) {
+                    updateWikiInfo();
+                } else if (!mPlot.equals("42. Просто 42.")) {
+                    tvInfo.setText(mPlot);
+                    tvInfo.setVisibility(View.VISIBLE);
+                }
+
+                if (mImdbPosterLink != null && !mImdbPosterLink.equals(""))
+                    updatePoster();
+                break;
+            default:
+                if (mPlot == null || mPlot.equals("") && !mPlot.equals("42. Просто 42.")) {
+                    updateWikiInfo();
+                } else if (!mPlot.equals("42. Просто 42.")) {
+                    tvInfo.setText(mPlot);
+                    tvInfo.setVisibility(View.VISIBLE);
+                }
+                break;
+        }
+
+        if (cursor != null) {
+            cursor.close();
         }
     }
     

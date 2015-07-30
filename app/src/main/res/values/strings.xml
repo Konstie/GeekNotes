@@ -31,4 +31,5 @@
 
     <string name="sync_account_type">gnotes.com</string>
     <string name="content_authority">com.gnotes.app</string>
+    <string name="select_cats">Выберите предпочитаемые категории</string>
 </resources>

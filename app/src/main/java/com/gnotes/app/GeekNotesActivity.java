@@ -16,20 +16,9 @@ import java.util.ArrayList;
 
 public class GeekNotesActivity extends AppCompatActivity {
 
-    private String menuTitles[] = {"Заметки", "Новая запись", "Настройки", "Выход"};
-    private int icons[] = {android.R.drawable.ic_menu_slideshow, android.R.drawable.ic_menu_add,
-            android.R.drawable.ic_menu_preferences, android.R.drawable.ic_menu_close_clear_cancel};
+    private String menuTitles[] = {"Новая запись", "Туториал", "Выход"};
+    private int icons[] = {R.mipmap.ic_menu_add, R.mipmap.ic_action_tutorial, R.mipmap.ic_action_quit};
 
-    private String name = "GeekNotes";
-    private String slogan = "don't forget to widen your outlook";
-
-    private static ArrayList<String> filterCats;
-
-    private Toolbar toolbar;
-
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private DrawerLayout drawerLayout;
 
     private ActionBarDrawerToggle mDrawerToggle;
@@ -39,15 +28,17 @@ public class GeekNotesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geek_notes);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new DrawerAdapter(menuTitles, icons, name, slogan, this);
+        String name = "GeekNotes";
+        String slogan = "don't forget to widen your outlook";
+        RecyclerView.Adapter mAdapter = new DrawerAdapter(menuTitles, icons, name, slogan, this);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -78,7 +69,7 @@ public class GeekNotesActivity extends AppCompatActivity {
             }
         });
 
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -127,7 +118,7 @@ public class GeekNotesActivity extends AppCompatActivity {
                 startActivity(newNoteIntent);
                 break;
             case 2:
-                // TODO: Settings activity with all that stuff
+                // TODO: Tutorial overlay
                 break;
             case 3:
                 finish();

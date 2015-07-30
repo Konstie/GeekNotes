@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +20,6 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.gnotes.app.data.GeekNotesDbHelper;
-import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -146,7 +147,7 @@ public class GeekNotesFragment extends Fragment {
                 final String itemTitle = itemText.getText().toString();
                 switch (index) {
                     case 0: // performing current item selection in order to look its' info up
-                        listView.performItemClick(listView.getChildAt(i), i, listView.getItemIdAtPosition(i));
+                        listView.performItemClick(listView.getChildAt(i - listView.getFirstVisiblePosition()), i, listView.getItemIdAtPosition(i));
                         break;
                     case 1: // item edit dialog call
                         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
@@ -154,6 +155,8 @@ public class GeekNotesFragment extends Fragment {
                                 .customView(R.layout.change_item_dialog, true)
                                 .positiveText("Сохранить")
                                 .negativeText("Отменить")
+                                .positiveColor(Color.WHITE)
+                                .negativeColor(Color.WHITE)
                                 .callback(new MaterialDialog.ButtonCallback() {
                                     @Override
                                     public void onPositive(MaterialDialog dialog) {
@@ -198,7 +201,7 @@ public class GeekNotesFragment extends Fragment {
                         break;
                     case 2: // remove item option
                         dbHelper.deleteByTitle(itemTitle);
-                        Toast.makeText(getActivity(), "Заметка «" + itemTitle + "» удалена", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(getView(), "Заметка «" + itemTitle + "» удалена", Snackbar.LENGTH_SHORT).show();
 
                         if (filterSpinner.getSelectedItem().toString().equals("Все")) {
                             adapter.changeCursor(dbHelper.getAllData());
@@ -213,7 +216,6 @@ public class GeekNotesFragment extends Fragment {
         });
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.attachToListView(listView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,6 +223,7 @@ public class GeekNotesFragment extends Fragment {
                 startActivity(newNoteIntent);
             }
         });
+
         return rootView;
     }
 

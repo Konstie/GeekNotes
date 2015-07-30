@@ -45,8 +45,20 @@ public class GeekNotesDbHelper {
         ContentValues cv = new ContentValues();
         cv.put(GeekNotesContract.GeekEntry.COLUMN_TITLE, newTitle);
         cv.put(GeekNotesContract.GeekEntry.COLUMN_INFO, newExtra);
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO, "");
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_POSTERLINK, "");
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_RANK, "");
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_INFO, "");
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_TRANSLATION, "");
         database.update(GeekNotesContract.GeekEntry.TABLE_NAME, cv, GeekNotesContract.GeekEntry.COLUMN_TITLE + " = ?",
-                new String[] {sourceTitle});
+                new String[]{sourceTitle});
+    }
+
+    public void resetWikipediaArticlePlot(String itemTitle) {
+        ContentValues cv = new ContentValues();
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO, "42. Просто 42."); // заглушка
+        database.update(GeekNotesContract.GeekEntry.TABLE_NAME, cv, GeekNotesContract.GeekEntry.COLUMN_TITLE + " = ?",
+                new String[]{itemTitle});
     }
 
     public Cursor getAllData() {

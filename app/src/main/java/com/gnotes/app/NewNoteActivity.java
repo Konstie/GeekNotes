@@ -1,12 +1,12 @@
 package com.gnotes.app;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
 import com.gnotes.app.data.GeekNotesDbHelper;
-import com.melnykov.fab.FloatingActionButton;
 
 public class NewNoteActivity extends AppCompatActivity {
     private Spinner mSpinner;
@@ -41,6 +41,22 @@ public class NewNoteActivity extends AppCompatActivity {
         mExtraNotes = (EditText) findViewById(R.id.extra_info);
 
         dbHelper = new GeekNotesDbHelper(this);
+
+//        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setBaselineAlignBottom(true);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Item item = new Item(mTitle.getText().toString(), mSpinner.getSelectedItem().toString(),
+//                        mDescriptionTitle.getText().toString(), mExtraNotes.getText().toString());
+//
+//                if (!item.getName().equals("")) {
+//                    dbHelper.insertData(item.getName(), item.getCategory(), item.getExtraField(), item.getExtraInfo());
+//                    Toast.makeText(getBaseContext(), getResources().getString(R.string.note_added), Toast.LENGTH_SHORT).show();
+//                    onBackPressed();
+//                }
+//            }
+//        });
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBaselineAlignBottom(true);
