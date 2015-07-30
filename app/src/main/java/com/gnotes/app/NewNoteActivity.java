@@ -42,22 +42,6 @@ public class NewNoteActivity extends AppCompatActivity {
 
         dbHelper = new GeekNotesDbHelper(this);
 
-//        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setBaselineAlignBottom(true);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Item item = new Item(mTitle.getText().toString(), mSpinner.getSelectedItem().toString(),
-//                        mDescriptionTitle.getText().toString(), mExtraNotes.getText().toString());
-//
-//                if (!item.getName().equals("")) {
-//                    dbHelper.insertData(item.getName(), item.getCategory(), item.getExtraField(), item.getExtraInfo());
-//                    Toast.makeText(getBaseContext(), getResources().getString(R.string.note_added), Toast.LENGTH_SHORT).show();
-//                    onBackPressed();
-//                }
-//            }
-//        });
-
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBaselineAlignBottom(true);
         fab.setOnClickListener(new View.OnClickListener() {
