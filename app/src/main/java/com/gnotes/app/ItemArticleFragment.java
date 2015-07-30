@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -83,7 +84,7 @@ public class ItemArticleFragment extends Fragment
         ((ItemArticleActivity) getActivity()).setSupportActionBar((Toolbar) rootView.findViewById(R.id.toolbar_article));
         ActionBar actionBar = ((ItemArticleActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            // actionBar.setLogo(getResources().getDrawable(R.drawable.tardis_icon));
+            // actionBar.setLogo(getResources().getDrawable(R.mipmap.tardis_icon));
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(mItemTitle);
         }
@@ -120,7 +121,7 @@ public class ItemArticleFragment extends Fragment
             }
             tvRating.setText("Рейтинг IMDB: " + mImdbRating);
             tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
-            if (mImdbPosterLink != null && !mImdbPosterLink.equals("") && canEnslaveTheWorld()) {
+            if (mImdbPosterLink != null && !mImdbPosterLink.equals("") && isOnline()) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
                         .load(mImdbPosterLink)
@@ -214,7 +215,7 @@ public class ItemArticleFragment extends Fragment
                 }
             }
 
-            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null) && canEnslaveTheWorld()) {
+            if (!(mImdbPosterLink.equals("") || mImdbPosterLink == null) && isOnline()) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
                         .load(mImdbPosterLink)
@@ -262,7 +263,7 @@ public class ItemArticleFragment extends Fragment
         }
     }
     
-    private boolean canEnslaveTheWorld() {
+    private boolean isOnline() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = connectivityManager.getActiveNetworkInfo();
@@ -278,7 +279,11 @@ public class ItemArticleFragment extends Fragment
             public void onClick(View v) {
                 Uri uriUrl = Uri.parse("http://www.google.com.my/search?q=" + mItemTitle);
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                startActivity(launchBrowser);
+                if (isOnline()) {
+                    startActivity(launchBrowser);
+                } else {
+                    Toast.makeText(getActivity(), "Проверьте ваше подключение. Эта фича недоступна в оффлайн-режиме", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

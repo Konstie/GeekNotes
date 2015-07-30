@@ -52,7 +52,7 @@ public class GeekNotesFragment extends Fragment {
         toolbar = (Toolbar) (getActivity()).findViewById(R.id.toolbar);
         ((GeekNotesActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("");
-        toolbar.setLogo(R.drawable.tardis_icon);
+        toolbar.setLogo(R.mipmap.tardis_icon);
 
         View spinnerContainer = LayoutInflater.from(getActivity()).inflate(R.layout.toolbar_main_spinner, toolbar, false);
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
@@ -118,13 +118,13 @@ public class GeekNotesFragment extends Fragment {
                 SwipeMenuItem infoItem = new SwipeMenuItem(getActivity().getApplicationContext());
                 infoItem.setBackground(new ColorDrawable(Color.YELLOW));
                 infoItem.setWidth(100);
-                infoItem.setIcon(R.drawable.ic_action_info);
+                infoItem.setIcon(R.mipmap.ic_action_info);
                 swipeMenu.addMenuItem(infoItem);
 
                 SwipeMenuItem editItem = new SwipeMenuItem(getActivity().getApplicationContext());
                 editItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0xA5, 0x00)));
                 editItem.setWidth(100);
-                editItem.setIcon(R.drawable.ic_action_edit);
+                editItem.setIcon(R.mipmap.ic_action_edit);
                 swipeMenu.addMenuItem(editItem);
 
                 SwipeMenuItem removeItem = new SwipeMenuItem(
@@ -132,7 +132,7 @@ public class GeekNotesFragment extends Fragment {
                 );
                 removeItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 removeItem.setWidth(100);
-                removeItem.setIcon(R.drawable.ic_action_delete);
+                removeItem.setIcon(R.mipmap.ic_action_delete);
                 swipeMenu.addMenuItem(removeItem);
             }
         };

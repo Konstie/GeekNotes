@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.gnotes.app.GeekNotesFragment;
 import com.gnotes.app.R;
 
 public class GeekNotesAdapter extends CursorAdapter {
@@ -25,8 +24,8 @@ public class GeekNotesAdapter extends CursorAdapter {
     static final int COL_GEEKNOTE_ARTICLE_IMDB_INFO = 7;
     static final int COL_GEEKNOTE_POSTERLINK = 8;
 
-    private final int[] catIcons = {R.drawable.cat_book, R.drawable.cat_cartoon, R.drawable.cat_comics, R.drawable.cat_game,
-            R.drawable.cat_music, R.drawable.cat_series, R.drawable.cat_movie};
+    private final int[] catIcons = {R.mipmap.cat_book, R.mipmap.cat_cartoon, R.mipmap.cat_comics, R.mipmap.cat_game,
+            R.mipmap.cat_music, R.mipmap.cat_series, R.mipmap.cat_movie};
 
     public GeekNotesAdapter(Context context, Cursor cursor, int flags) {
         super(context, cursor, flags);
