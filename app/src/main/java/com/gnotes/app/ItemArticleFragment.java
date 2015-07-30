@@ -30,6 +30,8 @@ public class
         ItemArticleFragment extends Fragment
         implements ObservableScrollViewCallbacks {
 
+    public static final String SECRET_CODE = "42. Просто 42.";
+
     static final int COL_GEEKNOTE_ID = 0;
     static final int COL_GEEKNOTE_TITLE = 1;
     static final int COL_GEEKNOTE_CATEGORY = 2;
@@ -117,7 +119,7 @@ public class
             mImdbPlot = savedInstanceState.getString("IMDB_PLOT");
 
             tvInfo.setText(mPlot);
-            if (mPlot != null && !mPlot.equals("")) {
+            if (mPlot != null && !mPlot.equals("") && !mPlot.equals(SECRET_CODE)) {
                 tvInfo.setVisibility(View.VISIBLE);
             }
             tvRating.setText("Рейтинг IMDB: " + mImdbRating);
@@ -202,7 +204,7 @@ public class
                     mPlot = (cursor.getString(COL_GEEKNOTE_ARTICLE_INFO) != null) ?
                             cursor.getString(COL_GEEKNOTE_ARTICLE_INFO) : "";
 
-                    if (!mPlot.equals("") && mPlot != null && !mPlot.equals("42. Просто 42.")) {
+                    if (!mPlot.equals("") && mPlot != null && !mPlot.equals(SECRET_CODE)) {
                         tvInfo.setVisibility(View.VISIBLE);
                         tvInfo.setText(mPlot);
                     }
@@ -297,7 +299,7 @@ public class
                     tvRating.setVisibility(View.VISIBLE);
                 }
 
-                if (mPlot == null || mPlot.equals("") && !mPlot.equals("42. Просто 42.")) {
+                if (mPlot == null || mPlot.equals("") && !mPlot.equals(SECRET_CODE)) {
                     updateWikiInfo();
                 } else if (!mPlot.equals("42. Просто 42.")) {
                     tvInfo.setText(mPlot);
@@ -308,9 +310,9 @@ public class
                     updatePoster();
                 break;
             default:
-                if (mPlot == null || mPlot.equals("") && !mPlot.equals("42. Просто 42.")) {
+                if (mPlot == null || mPlot.equals("") && !mPlot.equals(SECRET_CODE)) {
                     updateWikiInfo();
-                } else if (!mPlot.equals("42. Просто 42.")) {
+                } else if (!mPlot.equals(SECRET_CODE)) {
                     tvInfo.setText(mPlot);
                     tvInfo.setVisibility(View.VISIBLE);
                 }
@@ -341,7 +343,8 @@ public class
                 if (isOnline()) {
                     startActivity(launchBrowser);
                 } else {
-                    Toast.makeText(getActivity(), "Проверьте ваше подключение. Эта фича недоступна в оффлайн-режиме", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Проверьте ваше соединение. " +
+                            "Эта фича недоступна в оффлайн-режиме", Toast.LENGTH_SHORT).show();
                 }
             }
         });
