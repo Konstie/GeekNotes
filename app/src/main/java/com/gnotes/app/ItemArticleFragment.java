@@ -208,6 +208,10 @@ public class
                     }
                 }
             }
+
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -237,6 +241,9 @@ public class
             }
 
             updatePoster();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 

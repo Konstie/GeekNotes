@@ -62,6 +62,7 @@ public class GeekNotesDbHelper {
     }
 
     public Cursor getAllData() {
+
         String buildSQL = "SELECT * FROM " + GeekNotesContract.GeekEntry.TABLE_NAME + " ORDER BY "
                 + GeekNotesContract.GeekEntry._ID + " DESC";
         return database.rawQuery(buildSQL, null);

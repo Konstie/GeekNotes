@@ -21,7 +21,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     private String slogan;
     Context context;
 
-    DrawerAdapter(String titles[], int icons[],
+    public DrawerAdapter(String titles[], int icons[],
                   String name, String slogan, Context passedCtx) {
         mMenuTitles = titles;
         mIcons = icons;
