@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import com.gnotes.app.adapters.DrawerAdapter;
 
-
 public class GeekNotesActivity extends AppCompatActivity {
 
     private String menuTitles[] = {"Новая запись", "Туториал", "Выход"};
@@ -28,9 +27,11 @@ public class GeekNotesActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        }
 
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -63,7 +64,7 @@ public class GeekNotesActivity extends AppCompatActivity {
 
             @Override
             public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                // здесь пока что царит пустота
+
             }
         });
 
@@ -92,20 +93,12 @@ public class GeekNotesActivity extends AppCompatActivity {
                     .replace(R.id.container, mainFragment)
                     .commit();
         }
-
-        // GeekNotesSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        // Handle your other action bar items...
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
     }
 
     public void handleDrawerItems(RecyclerView rv, MotionEvent e, View child) {
