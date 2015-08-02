@@ -1,11 +1,12 @@
 package com.gnotes.app;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
+import com.melnykov.fab.FloatingActionButton;
 import com.gnotes.app.data.GeekNotesDbHelper;
 
 public class NewNoteActivity extends AppCompatActivity {

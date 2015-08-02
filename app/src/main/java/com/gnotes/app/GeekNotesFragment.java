@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -20,6 +19,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.gnotes.app.data.GeekNotesDbHelper;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +36,6 @@ public class GeekNotesFragment extends Fragment {
     private GeekNotesDbHelper dbHelper;
     private GeekNotesAdapter adapter;
 
-    private Toolbar toolbar;
     private Spinner filterSpinner;
     private SwipeMenuListView listView;
 
@@ -50,7 +49,7 @@ public class GeekNotesFragment extends Fragment {
                              final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_geeknotes, parent, false);
 
-        toolbar = (Toolbar) (getActivity()).findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) (getActivity()).findViewById(R.id.toolbar);
         ((GeekNotesActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("");
         toolbar.setLogo(R.mipmap.tardis_icon);
@@ -116,12 +115,6 @@ public class GeekNotesFragment extends Fragment {
         SwipeMenuCreator creator = new SwipeMenuCreator() {
             @Override
             public void create(SwipeMenu swipeMenu) {
-                SwipeMenuItem infoItem = new SwipeMenuItem(getActivity().getApplicationContext());
-                infoItem.setBackground(new ColorDrawable(Color.YELLOW));
-                infoItem.setWidth(100);
-                infoItem.setIcon(R.mipmap.ic_action_info);
-                swipeMenu.addMenuItem(infoItem);
-
                 SwipeMenuItem editItem = new SwipeMenuItem(getActivity().getApplicationContext());
                 editItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0xA5, 0x00)));
                 editItem.setWidth(100);
@@ -146,10 +139,10 @@ public class GeekNotesFragment extends Fragment {
                 TextView itemText = (TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.name);
                 final String itemTitle = itemText.getText().toString();
                 switch (index) {
-                    case 0: // performing current item selection in order to look its' info up
-                        listView.performItemClick(listView.getChildAt(i - listView.getFirstVisiblePosition()), i, listView.getItemIdAtPosition(i));
-                        break;
-                    case 1: // item edit dialog call
+//                    case 0: // performing current item selection in order to look its' info up
+//                        listView.performItemClick(listView.getChildAt(i - listView.getFirstVisiblePosition()), i, listView.getItemIdAtPosition(i));
+//                        break;
+                    case 0: // item edit dialog call
                         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                                 .title("Изменить заметку")
                                 .customView(R.layout.change_item_dialog, true)
@@ -199,7 +192,7 @@ public class GeekNotesFragment extends Fragment {
 
                         dialog.show();
                         break;
-                    case 2: // remove item option
+                    case 1: // remove item option
                         dbHelper.deleteByTitle(itemTitle);
                         Snackbar.make(getView(), "Заметка «" + itemTitle + "» удалена", Snackbar.LENGTH_SHORT).show();
 
@@ -216,6 +209,7 @@ public class GeekNotesFragment extends Fragment {
         });
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.attachToListView(listView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
