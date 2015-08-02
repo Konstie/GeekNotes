@@ -139,9 +139,6 @@ public class GeekNotesFragment extends Fragment {
                 TextView itemText = (TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.name);
                 final String itemTitle = itemText.getText().toString();
                 switch (index) {
-//                    case 0: // performing current item selection in order to look its' info up
-//                        listView.performItemClick(listView.getChildAt(i - listView.getFirstVisiblePosition()), i, listView.getItemIdAtPosition(i));
-//                        break;
                     case 0: // item edit dialog call
                         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                                 .title("Изменить заметку")

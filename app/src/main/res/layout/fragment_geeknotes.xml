@@ -14,19 +14,6 @@
             android:listSelector="@android:color/transparent"
             android:descendantFocusability="blocksDescendants" />
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_margin="16dp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:src="@mipmap/ic_add_white"-->
-        <!--app:elevation="6dp"-->
-        <!--app:pressedTranslationZ="12dp"-->
-        <!--app:rippleColor="@color/primary_dark"-->
-        <!--app:backgroundTint="@color/accent"/>-->
-
     <com.melnykov.fab.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
