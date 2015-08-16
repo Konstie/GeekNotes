@@ -28,8 +28,8 @@ import java.util.List;
 public class GeekNotesFragment extends Fragment {
 
     private static final ArrayList<String> filterCats = new ArrayList<>(
-            Arrays.asList("Все", "Книга", "Фильм", "Сериал",
-                    "Мультсериал", "Мультфильм", "Муз. исполнитель",
+            Arrays.asList("Все", "Книга", "Фильм", "Мультфильм",
+                    "Сериал", "Мультсериал", "Муз. исполнитель",
                     "Игра", "Комикс", "Аниме")
     );
 
@@ -42,6 +42,7 @@ public class GeekNotesFragment extends Fragment {
     private TextView mTextField;
     private EditText mEditTitle;
     private EditText mEditInfo;
+    private Spinner mSpinnerEditCategory;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -150,10 +151,11 @@ public class GeekNotesFragment extends Fragment {
                                 .callback(new MaterialDialog.ButtonCallback() {
                                     @Override
                                     public void onPositive(MaterialDialog dialog) {
-                                        String title, info;
+                                        String title, info, category;
                                         title = mEditTitle.getText().toString();
                                         info = mEditInfo.getText().toString();
-                                        dbHelper.updateData(itemTitle, title, info);
+                                        category = mSpinnerEditCategory.getSelectedItem().toString();
+                                        dbHelper.updateData(itemTitle, title, info, category);
 
                                         if (filterSpinner.getSelectedItem().toString().equals("Все")) {
                                             adapter.changeCursor(dbHelper.getAllData());
@@ -186,6 +188,17 @@ public class GeekNotesFragment extends Fragment {
 
                         mEditInfo = (EditText) dialog.getCustomView().findViewById(R.id.edit_info);
                         mEditInfo.setText(extraValue);
+
+                        mSpinnerEditCategory = (Spinner) dialog.getCustomView().findViewById(R.id.spinner_category);
+                        ArrayAdapter<CharSequence> dialogSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
+                                R.array.categories, android.R.layout.simple_spinner_item);
+                        dialogSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                        mSpinnerEditCategory.setAdapter(dialogSpinnerAdapter);
+
+                        String currentItemCategory = ((TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.category))
+                                .getText().toString();
+
+                        mSpinnerEditCategory.setSelection(filterCats.indexOf(currentItemCategory) - 1);
 
                         dialog.show();
                         break;

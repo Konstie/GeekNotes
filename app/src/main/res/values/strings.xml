@@ -13,9 +13,9 @@
     <string-array name="categories">
         <item>Книга</item>
         <item>Фильм</item>
+        <item>Мультфильм</item>
         <item>Сериал</item>
         <item>Мультсериал</item>
-        <item>Мультфильм</item>
         <item>Муз. исполнитель</item>
         <item>Игра</item>
         <item>Комикс</item>

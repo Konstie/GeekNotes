@@ -36,9 +36,24 @@
             android:textSize="20sp"
             android:layout_marginTop="4dp"
             android:textColor="#fff"
-            android:hint="(пустота)"
             android:textColorHint="#ffcbcbcb"
             android:inputType="text"/>
 
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#ffe6e6e6"
+            android:layout_marginTop="16dp"
+            android:id="@+id/edit_category_text"
+            android:text="Категория" />
 
+    <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_category"
+            android:layout_marginTop="4dp"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/grey_title">
+    </Spinner>
 </LinearLayout>

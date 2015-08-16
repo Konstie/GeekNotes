@@ -41,10 +41,11 @@ public class GeekNotesDbHelper {
         database.insert(table, nullColumnHack, values);
     }
 
-    public void updateData(String sourceTitle, String newTitle, String newExtra) {
+    public void updateData(String sourceTitle, String newTitle, String newExtra, String newCategory) {
         ContentValues cv = new ContentValues();
         cv.put(GeekNotesContract.GeekEntry.COLUMN_TITLE, newTitle);
         cv.put(GeekNotesContract.GeekEntry.COLUMN_INFO, newExtra);
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_CATEGORY, newCategory);
         cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO, "");
         cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_POSTERLINK, "");
         cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_RANK, "");

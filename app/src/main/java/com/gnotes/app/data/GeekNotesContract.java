@@ -26,7 +26,6 @@ public class GeekNotesContract {
         public static final String TABLE_NAME = "notes_table";
 
         public static final int VERSION = 1;
-        public static final String COLUMN_NOTE_ID = "note_id";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_CATEGORY = "category";
         public static final String COLUMN_INFOTYPE = "infotype";
