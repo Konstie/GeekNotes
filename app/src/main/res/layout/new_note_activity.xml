@@ -34,7 +34,7 @@
                         <com.rengwuxian.materialedittext.MaterialEditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Название"
+                                android:hint="@string/edit_titlename"
                                 android:id="@+id/item_title"
                                 android:text=""
                                 android:textSize="32sp"
@@ -50,7 +50,7 @@
                         <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Категория:"
+                                android:text="@string/edit_categoryname"
                                 android:textColor="@color/primary_light"
                                 android:textSize="20sp" />
 
@@ -92,7 +92,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/text_extra_type"
-                                android:text="Дополнительная информация:"
+                                android:text="@string/new_extrainfo"
                                 android:textColor="#000000"
                                 android:textSize="20sp" />
 

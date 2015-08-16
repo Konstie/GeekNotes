@@ -1,10 +1,8 @@
 package com.gnotes.app;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Item implements Serializable {
-    public static List<Item> items;
     private int id = 1;
     private String name;
     private String category;

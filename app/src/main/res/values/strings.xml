@@ -23,12 +23,18 @@
     </string-array>
 
     <string name="note_added">Ваша заметка сохранена!</string>
-    
-    <string name="btn_add">Добавить заметку</string>
 
-    <string name="undo">Undo</string>
-    <string name="undoall">Undo all</string>
+    <string name="empty_list_description">Пока здесь пусто, но вы можете добавить заметку о любых фильме, книге, игре,
+музыкальном исполнителе и и множестве других крутых вещей, которые вас успели заинтересовать, или которые вам
+порекомендовали знакомые, и мгновенно узнать о них сведения, не открывая браузер, просто нажав на кнопку в правом нижнем углу.
+    </string>
+    <string name="edit_titlename">Название</string>
+    <string name="edit_categoryname">Категория</string>
 
-    <string name="sync_account_type">gnotes.com</string>
-    <string name="content_authority">com.gnotes.app</string>
+    <string name="article_rating">Рейтинг IMDB:</string>
+    <string name="article_plot">Сюжет (англ.):</string>
+
+    <string name="new_extrainfo">Дополнительная информация:</string>
+
+    <string name="card_extra">Дополнительно:</string>
 </resources>

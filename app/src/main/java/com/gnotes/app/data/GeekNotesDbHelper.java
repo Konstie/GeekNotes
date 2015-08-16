@@ -5,10 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.gnotes.app.Item;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GeekNotesDbHelper {
     private static final int DB_VERSION = 1;
@@ -37,10 +33,6 @@ public class GeekNotesDbHelper {
         database.insert(GeekNotesContract.GeekEntry.TABLE_NAME, null, cv);
     }
 
-    public void insertData(String table, String nullColumnHack, ContentValues values) {
-        database.insert(table, nullColumnHack, values);
-    }
-
     public void updateData(String sourceTitle, String newTitle, String newExtra, String newCategory) {
         ContentValues cv = new ContentValues();
         cv.put(GeekNotesContract.GeekEntry.COLUMN_TITLE, newTitle);
@@ -63,7 +55,6 @@ public class GeekNotesDbHelper {
     }
 
     public Cursor getAllData() {
-
         String buildSQL = "SELECT * FROM " + GeekNotesContract.GeekEntry.TABLE_NAME + " ORDER BY "
                 + GeekNotesContract.GeekEntry._ID + " DESC";
         return database.rawQuery(buildSQL, null);
@@ -81,10 +72,6 @@ public class GeekNotesDbHelper {
         return database.rawQuery(buildSQL, null);
     }
 
-    public void deleteByID(int position) {
-        database.delete(GeekNotesContract.GeekEntry.TABLE_NAME, GeekNotesContract.GeekEntry._ID + " = " + (position), null);
-    }
-
     public void deleteByTitle(String title) {
         String[] whereArgs = new String[]{title};
         database.delete(GeekNotesContract.GeekEntry.TABLE_NAME, GeekNotesContract.GeekEntry.COLUMN_TITLE + " = ?", whereArgs);
@@ -98,10 +85,10 @@ public class GeekNotesDbHelper {
         @Override
         public void onCreate(SQLiteDatabase database) {
             final String SQL_CREATE_NOTES_TABLE = "CREATE TABLE " + GeekNotesContract.GeekEntry.TABLE_NAME + " (" +
-                    GeekNotesContract.GeekEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    GeekNotesContract.GeekEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                    GeekNotesContract.GeekEntry.COLUMN_TITLE + " TEXT, " +
-                    GeekNotesContract.GeekEntry.COLUMN_CATEGORY + " TEXT, " +
+                    GeekNotesContract.GeekEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                    GeekNotesContract.GeekEntry.COLUMN_CATEGORY + " INTEGER NOT NULL, " +
                     GeekNotesContract.GeekEntry.COLUMN_INFOTYPE + " TEXT, " +
                     GeekNotesContract.GeekEntry.COLUMN_INFO + " TEXT, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO + " TEXT, " +

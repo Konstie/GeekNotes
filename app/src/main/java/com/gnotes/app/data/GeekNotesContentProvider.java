@@ -7,9 +7,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.util.Log;
-
-import java.sql.SQLException;
 
 public class GeekNotesContentProvider extends ContentProvider {
 
@@ -75,13 +72,14 @@ public class GeekNotesContentProvider extends ContentProvider {
         Uri returnUri;
 
         switch (match) {
-            case GEEKNOTE:
+            case GEEKNOTE: {
                 long _id = db.insert(GeekNotesContract.GeekEntry.TABLE_NAME, null, values);
                 if (_id > 0)
                     returnUri = GeekNotesContract.GeekEntry.buildGeekNotesURI(_id);
                 else
-                    throw new android.database.SQLException("Failed to insert row into " + uri + ", id = " + _id);
+                    throw new android.database.SQLException("Failed to insert row values into " + uri + ", id = " + _id);
                 break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

@@ -23,7 +23,7 @@ public class GeekNotesContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_NOTE;
 
-        public static final String TABLE_NAME = "notes_table";
+        public static final String TABLE_NAME = "notes";
 
         public static final int VERSION = 1;
         public static final String COLUMN_TITLE = "title";

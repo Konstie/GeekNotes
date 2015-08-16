@@ -9,7 +9,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="#ffe6e6e6"
-            android:text="Название" />
+            android:text="@string/edit_titlename" />
 
     <EditText
             android:id="@+id/edit_title"
@@ -46,7 +46,7 @@
             android:textColor="#ffe6e6e6"
             android:layout_marginTop="16dp"
             android:id="@+id/edit_category_text"
-            android:text="Категория" />
+            android:text="@string/edit_categoryname" />
 
     <Spinner
             android:layout_width="match_parent"

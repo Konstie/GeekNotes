@@ -2,6 +2,7 @@ package com.gnotes.app;
 
 import android.os.Bundle;
 //import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -24,8 +25,12 @@ public class NewNoteActivity extends AppCompatActivity {
 
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Новая заметка");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle("Новая заметка");
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mTitle = (EditText) findViewById(R.id.item_title);
         mDescriptionTitle = (TextView) findViewById(R.id.text_extra_type);

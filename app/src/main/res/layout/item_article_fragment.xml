@@ -46,7 +46,7 @@
                             <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Рейтинг IMDB: "
+                                    android:text="@string/article_rating"
                                     android:textSize="22sp"
                                     android:textColor="@android:color/black"
                                     android:id="@+id/imdbRank"
@@ -54,7 +54,7 @@
                                     android:padding="16dp"
                                     android:layout_marginTop="8dp"/>
                             <TextView
-                                    android:text="Жил-был Доктор и путешествовал по пространству-времени..."
+                                    android:text=""
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textSize="18sp"
@@ -63,7 +63,7 @@
                                     android:visibility="gone"
                                     android:padding="16dp"/>
                             <TextView
-                                    android:text="Сюжет (англ.): "
+                                    android:text="@string/article_plot"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:textSize="18sp"
