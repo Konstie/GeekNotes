@@ -22,6 +22,13 @@
         <item>Аниме</item>
     </string-array>
 
+    <string name="cat_author">Автор</string>
+    <string name="cat_director">Режиссёр</string>
+    <string name="cat_studio">Студия</string>
+    <string name="cat_studirector">Студия / режиссёр</string>
+    <string name="cat_genre">Жанр</string>
+    <string name="cat_platform">Платформа</string>
+
     <string name="note_added">Ваша заметка сохранена!</string>
 
     <string name="empty_list_description">Пока здесь пусто, но вы можете добавить заметку о любых фильме, книге, игре,
@@ -31,10 +38,23 @@
     <string name="edit_titlename">Название</string>
     <string name="edit_categoryname">Категория</string>
 
-    <string name="article_rating">Рейтинг IMDB:</string>
-    <string name="article_plot">Сюжет (англ.):</string>
+    <string name="article_rating">Рейтинг IMDB: </string>
+    <string name="article_plot">Сюжет (англ.): </string>
 
     <string name="new_extrainfo">Дополнительная информация:</string>
 
     <string name="card_extra">Дополнительно:</string>
+    <string name="cats_all">Все</string>
+
+    <string name="dialog_change_note">Изменить заметку</string>
+    <string name="dialog_save">Сохранить</string>
+    <string name="dialog_cancel">Отменить</string>
+
+    <string name="msg_note_stored">Заметка «%1$s» удалена</string>
+    <string name="msg_search_warning">Проверьте ваше соединение. Эта фича недоступна в оффлайн-режиме!</string>
+    <string name="msg_wiki_removed">Wiki-описание для заметки «%1$s» удалено!</string>
+
+    <string name="toolbar_new_note">Новая заметка</string>
+
+    <string name="url_wikipedia">https://ru.wikipedia.org/w/api.php?</string>
 </resources>

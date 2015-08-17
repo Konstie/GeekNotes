@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">GeekNotes</string>
+    <string name="action_search">Search</string>
+    <string name="drawer_open">Drawer opened!</string>
+    <string name="drawer_closed">Drawer closed!</string>
+
+    <string-array name="menu_items">
+        <item>Add note</item>
+        <item>Settings</item>
+        <item>Exit</item>
+    </string-array>
+
+    <string-array name="categories">
+        <item>Book</item>
+        <item>Movie</item>
+        <item>Cartoon</item>
+        <item>TV Series</item>
+        <item>Cartoon series</item>
+        <item>Music artist</item>
+        <item>Game</item>
+        <item>Comics</item>
+        <item>Anime</item>
+    </string-array>
+
+    <string name="cat_author">Author</string>
+    <string name="cat_director">Director</string>
+    <string name="cat_studio">Studio</string>
+    <string name="cat_studirector">Studio / director</string>
+    <string name="cat_genre">Genre</string>
+    <string name="cat_platform">Platform</string>
+
+    <string name="note_added">Your note stored!</string>
+
+    <string name="edit_titlename">Title</string>
+    <string name="edit_categoryname">Category</string>
+
+    <string name="article_rating">IMDB rating: </string>
+    <string name="article_plot">Plot: </string>
+
+    <string name="new_extrainfo">Extra info:</string>
+
+    <string name="card_extra">Info:</string>
+
+    <string name="cats_all">All</string>
+    <string name="dialog_change_note">Change note</string>
+    <string name="dialog_save">Save</string>
+
+    <string name="msg_note_stored">Note «%1$s» exterminated</string>
+    <string name="msg_search_warning">Check your connection.
+This feature is not available in offline-mode!</string>
+    <string name="msg_wiki_removed">Wiki-description for a note «%1$s»
+        was exterminated!</string>
+
+    <string name="toolbar_new_note">New note</string>
+
+    <string name="url_wikipedia">https://en.wikipedia.org/w/api.php?</string>
+</resources>

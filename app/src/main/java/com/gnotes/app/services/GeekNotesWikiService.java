@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import com.gnotes.app.ItemArticleFragment;
+import com.gnotes.app.R;
 import com.gnotes.app.data.GeekNotesContract;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class GeekNotesWikiService extends IntentService {
         String prop = "extracts";
 
         try {
-            final String WIKI_BASE_URL_RU = "https://ru.wikipedia.org/w/api.php?";
+            final String WIKI_BASE_URL_RU = getString(R.string.url_wikipedia);
 
             final String WIKI_PARAM_FORMAT = "format";
             final String WIKI_PARAM_ACTION = "action";
@@ -138,7 +139,7 @@ public class GeekNotesWikiService extends IntentService {
                         : "";
             }
 
-            Log.w("TAAAAAAAAAAAAAAAG Plot", plot);
+            Log.w("Wikipedia Plot", plot);
 
             ContentValues noteValues = new ContentValues();
             noteValues.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO, plot);

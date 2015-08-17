@@ -1,6 +1,7 @@
 package com.gnotes.app;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,6 +19,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.gnotes.app.adapters.GeekNotesAdapter;
 import com.gnotes.app.data.GeekNotesDbHelper;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -27,11 +29,9 @@ import java.util.List;
 
 public class GeekNotesFragment extends Fragment {
 
-    private static final ArrayList<String> filterCats = new ArrayList<>(
-            Arrays.asList("Все", "Книга", "Фильм", "Мультфильм",
-                    "Сериал", "Мультсериал", "Муз. исполнитель",
-                    "Игра", "Комикс", "Аниме")
-    );
+    private Resources resources;
+
+    private List<String> filterCats;
 
     private GeekNotesDbHelper dbHelper;
     private GeekNotesAdapter adapter;
@@ -43,6 +43,16 @@ public class GeekNotesFragment extends Fragment {
     private EditText mEditTitle;
     private EditText mEditInfo;
     private Spinner mSpinnerEditCategory;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        resources = getResources();
+
+        filterCats = new ArrayList<>(Arrays.asList(resources.getStringArray(R.array.categories)));
+        filterCats.add(0, resources.getString(R.string.cats_all));
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -84,7 +94,7 @@ public class GeekNotesFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String chosenCategory = filterSpinner.getSelectedItem().toString();
-                if (chosenCategory.equals("Все")) {
+                if (chosenCategory.equals(filterCats.get(0))) {
                     adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(), 0);
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -142,10 +152,10 @@ public class GeekNotesFragment extends Fragment {
                 switch (index) {
                     case 0: // item edit dialog call
                         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                                .title("Изменить заметку")
+                                .title(resources.getString(R.string.dialog_change_note))
                                 .customView(R.layout.change_item_dialog, true)
-                                .positiveText("Сохранить")
-                                .negativeText("Отменить")
+                                .positiveText(resources.getString(R.string.dialog_save))
+                                .negativeText(resources.getString(R.string.dialog_cancel))
                                 .positiveColor(Color.WHITE)
                                 .negativeColor(Color.WHITE)
                                 .callback(new MaterialDialog.ButtonCallback() {
@@ -157,7 +167,7 @@ public class GeekNotesFragment extends Fragment {
                                         category = mSpinnerEditCategory.getSelectedItem().toString();
                                         dbHelper.updateData(itemTitle, title, info, category);
 
-                                        if (filterSpinner.getSelectedItem().toString().equals("Все")) {
+                                        if (filterSpinner.getSelectedItem().toString().equals(filterCats.get(0))) {
                                             adapter.changeCursor(dbHelper.getAllData());
                                         } else {
                                             adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
@@ -204,9 +214,10 @@ public class GeekNotesFragment extends Fragment {
                         break;
                     case 1: // remove item option
                         dbHelper.deleteByTitle(itemTitle);
-                        Snackbar.make(getView(), "Заметка «" + itemTitle + "» удалена", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(getView(), String.format(resources.getString(R.string.msg_note_stored),
+                                itemTitle), Snackbar.LENGTH_SHORT).show();
 
-                        if (filterSpinner.getSelectedItem().toString().equals("Все")) {
+                        if (filterSpinner.getSelectedItem().toString().equals(resources.getString(R.string.cats_all))) {
                             adapter.changeCursor(dbHelper.getAllData());
                         } else {
                             adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
@@ -279,7 +290,8 @@ public class GeekNotesFragment extends Fragment {
         }
 
         private String getTitle(int position) {
-            return position >= 0 && position < mItems.size() ? mItems.get(position) : "Все";
+            return position >= 0 && position < mItems.size() ? mItems.get(position) :
+                    filterCats.get(0);
         }
     }
 

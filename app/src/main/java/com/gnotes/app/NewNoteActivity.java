@@ -1,5 +1,6 @@
 package com.gnotes.app;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 //import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -10,7 +11,13 @@ import android.widget.*;
 import com.melnykov.fab.FloatingActionButton;
 import com.gnotes.app.data.GeekNotesDbHelper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class NewNoteActivity extends AppCompatActivity {
+    private Resources resources;
+    private ArrayList<String> categories;
+
     private Spinner mSpinner;
     private EditText mTitle;
     private TextView mDescriptionTitle;
@@ -23,12 +30,15 @@ public class NewNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_note_activity);
 
+        resources = getResources();
+        categories = new ArrayList<>(Arrays.asList(resources.getStringArray(R.array.categories)));
+
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle("Новая заметка");
+            actionBar.setTitle(getResources().getString(R.string.toolbar_new_note));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -68,22 +78,21 @@ public class NewNoteActivity extends AppCompatActivity {
     private AdapterView.OnItemSelectedListener onCatSpinnerListener = new AdapterView.OnItemSelectedListener() {
         public void onItemSelected(AdapterView<?> parent, View view, int pos,
                                    long id) {
-            if (mSpinner.getSelectedItem().equals("Книга")) {
-                mDescriptionTitle.setText("Автор");
-            } else if (mSpinner.getSelectedItem().equals("Фильм")) {
-                mDescriptionTitle.setText("Режиссер");
-            } else if (mSpinner.getSelectedItem().equals("Сериал") || mSpinner.getSelectedItem().equals("Мультсериал")) {
-                mDescriptionTitle.setText("Студия / озвучка");
-            } else if (mSpinner.getSelectedItem().equals("Мультфильм")) {
-                mDescriptionTitle.setText("Студия / режиссёр");
-            } else if (mSpinner.getSelectedItem().equals("Муз. исполнитель")) {
-                mDescriptionTitle.setText("Жанр");
-            } else if (mSpinner.getSelectedItem().equals("Игра")) {
-                mDescriptionTitle.setText("Платформа");
-            } else if (mSpinner.getSelectedItem().equals("Комикс")) {
-                mDescriptionTitle.setText("Автор");
-            } else if (mSpinner.getSelectedItem().equals("Аниме")) {
-                mDescriptionTitle.setText("Режиссер / студия");
+            if (mSpinner.getSelectedItem().equals(categories.get(0))) {
+                mDescriptionTitle.setText(resources.getString(R.string.cat_author));
+            } else if (mSpinner.getSelectedItem().equals(categories.get(1)) ||
+                    mSpinner.getSelectedItem().equals(categories.get(7))) {
+                mDescriptionTitle.setText(resources.getString(R.string.cat_director));
+            } else if (mSpinner.getSelectedItem().equals(categories.get(3)) ||
+                    mSpinner.getSelectedItem().equals(categories.get(4)) ||
+                    mSpinner.getSelectedItem().equals(categories.get(2))) {
+                mDescriptionTitle.setText(resources.getString(R.string.cat_studio));
+            } else if (mSpinner.getSelectedItem().equals(categories.get(5))) {
+                mDescriptionTitle.setText(resources.getString(R.string.cat_genre));
+            } else if (mSpinner.getSelectedItem().equals(categories.get(6))) {
+                mDescriptionTitle.setText(resources.getString(R.string.cat_platform));
+            } else if (mSpinner.getSelectedItem().equals(categories.get(8))) {
+                mDescriptionTitle.setText(resources.getString(R.string.cat_studirector));
             }
         }
 

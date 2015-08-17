@@ -30,7 +30,7 @@ public class
         ItemArticleFragment extends Fragment
         implements ObservableScrollViewCallbacks {
 
-    public static final String SECRET_CODE = "42. Просто 42.";
+    public static final String SECRET_CODE = "42. Just 42.";
 
     static final int COL_GEEKNOTE_ID = 0;
     static final int COL_GEEKNOTE_TITLE = 1;
@@ -167,8 +167,8 @@ public class
             case R.id.action_delete_wiki:
                 dbHelper.resetWikipediaArticlePlot(mItemTitle);
                 tvInfo.setVisibility(View.GONE);
-                Snackbar.make(getView(), "Wiki-описание для заметки «" + mItemTitle +
-                        "» было удалено", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getView(), String.format(getResources().getString(R.string.msg_wiki_removed),
+                        mItemTitle), Snackbar.LENGTH_SHORT).show();
                 return true;
             default:
                 return false;
@@ -235,9 +235,9 @@ public class
 
                     if (!mImdbPlot.equals("") && mImdbPlot != null) {
                         tvImdbPlot.setVisibility(View.VISIBLE);
-                        tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
+                        tvImdbPlot.setText(getResources().getString(R.string.article_plot) + mImdbPlot);
                         tvRating.setVisibility(View.VISIBLE);
-                        tvRating.setText("Рейтинг IMDB: " + mImdbRating);
+                        tvRating.setText(getResources().getString(R.string.article_rating) + mImdbRating);
                     }
                 }
             }
@@ -285,23 +285,23 @@ public class
         }
 
         switch (mCategory) {
-            case "Фильм":
-            case "Сериал":
-            case "Мультсериал":
-            case "Мультфильм":
-            case "Аниме":
+            case "Фильм": case "Movie":
+            case "Сериал": case "TV Series":
+            case "Мультсериал": case "Cartoon series":
+            case "Мультфильм": case "Cartoon":
+            case "Аниме": case "Anime":
                 if (mImdbPlot == null || mImdbPlot.equals("")) {
                     updateImdbInfo();
                 } else {
-                    tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
-                    tvRating.setText("Рейтинг IMDB: " + mImdbRating);
+                    tvImdbPlot.setText(getResources().getString(R.string.article_plot) + mImdbPlot);
+                    tvRating.setText(getResources().getString(R.string.article_rating) + mImdbRating);
                     tvImdbPlot.setVisibility(View.VISIBLE);
                     tvRating.setVisibility(View.VISIBLE);
                 }
 
                 if (mPlot == null || mPlot.equals("") && !mPlot.equals(SECRET_CODE)) {
                     updateWikiInfo();
-                } else if (!mPlot.equals("42. Просто 42.")) {
+                } else if (!mPlot.equals(SECRET_CODE)) {
                     tvInfo.setText(mPlot);
                     tvInfo.setVisibility(View.VISIBLE);
                 }
@@ -343,8 +343,8 @@ public class
                 if (isOnline()) {
                     startActivity(launchBrowser);
                 } else {
-                    Toast.makeText(getActivity(), "Проверьте ваше соединение. " +
-                            "Эта фича недоступна в оффлайн-режиме", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.msg_search_warning),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
