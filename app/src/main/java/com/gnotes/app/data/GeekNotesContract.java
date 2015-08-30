@@ -36,6 +36,7 @@ public class GeekNotesContract {
         public static final String COLUMN_ARTICLE_INFO = "article_info";
         public static final String COLUMN_ARTICLE_RANK = "rank";
         public static final String COLUMN_ARTICLE_IMDB_INFO = "imdb_info";
+        public static final String COLUMN_ARTICLE_IMDB_YEAR = "imdb_year";
 
         public static final String COLUMN_ARTICLE_POSTERLINK = "poster";
 

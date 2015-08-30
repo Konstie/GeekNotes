@@ -23,7 +23,7 @@
     </string-array>
 
     <string name="cat_author">Автор</string>
-    <string name="cat_director">Режиссёр</string>
+    <string name="cat_director">Режиссёр(ы)</string>
     <string name="cat_studio">Студия</string>
     <string name="cat_studirector">Студия / режиссёр</string>
     <string name="cat_genre">Жанр</string>
@@ -38,8 +38,9 @@
     <string name="edit_titlename">Название</string>
     <string name="edit_categoryname">Категория</string>
 
-    <string name="article_rating">Рейтинг IMDB: </string>
-    <string name="article_plot">Сюжет (англ.): </string>
+    <string name="article_rating">Рейтинг IMDB:\u0020</string>
+    <string name="article_plot">Сюжет (англ.):\u0020</string>
+    <string name="article_year">Год выпуска:\u0020</string>
 
     <string name="new_extrainfo">Дополнительная информация:</string>
 

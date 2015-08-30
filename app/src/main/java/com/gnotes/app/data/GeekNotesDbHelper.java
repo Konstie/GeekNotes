@@ -95,6 +95,7 @@ public class GeekNotesDbHelper {
                     GeekNotesContract.GeekEntry.COLUMN_TRANSLATION + " TEXT, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_RANK + " REAL, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_INFO + " TEXT, " +
+                    GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_YEAR + " INTEGER, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_POSTERLINK + " TEXT);";
 
             database.execSQL(SQL_CREATE_NOTES_TABLE);

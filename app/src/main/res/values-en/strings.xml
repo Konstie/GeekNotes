@@ -23,7 +23,7 @@
     </string-array>
 
     <string name="cat_author">Author</string>
-    <string name="cat_director">Director</string>
+    <string name="cat_director">Director(s)</string>
     <string name="cat_studio">Studio</string>
     <string name="cat_studirector">Studio / director</string>
     <string name="cat_genre">Genre</string>
@@ -34,8 +34,9 @@
     <string name="edit_titlename">Title</string>
     <string name="edit_categoryname">Category</string>
 
-    <string name="article_rating">IMDB rating: </string>
-    <string name="article_plot">Plot: </string>
+    <string name="article_rating">IMDB rating:\u0020</string>
+    <string name="article_plot">Plot:\u0020</string>
+    <string name="article_year">Year:\u0020</string>
 
     <string name="new_extrainfo">Extra info:</string>
 

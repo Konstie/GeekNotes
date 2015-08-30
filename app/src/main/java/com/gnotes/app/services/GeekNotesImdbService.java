@@ -36,7 +36,7 @@ public class GeekNotesImdbService extends IntentService {
         engTranlation = itemTitle;
 
         String lingvoJsonStr = connectToWiki(itemTitle);
-        getWikiArticle(itemTitle, lingvoJsonStr);
+        getWikiTranslation(itemTitle, lingvoJsonStr);
 
         String imdbJsonStr = connectToImdb(engTranlation);
         getImdbStuff(itemTitle, imdbJsonStr);
@@ -119,7 +119,7 @@ public class GeekNotesImdbService extends IntentService {
         return buffer.toString();
     }
 
-    private void getWikiArticle(String originalTitle, String wikiArticleJsonStr) {
+    private void getWikiTranslation(String originalTitle, String wikiArticleJsonStr) {
         final String GN_QUERY = "query";
         final String GN_PAGES = "pages";
         final String GN_PAGEID = "pageid";
@@ -175,7 +175,7 @@ public class GeekNotesImdbService extends IntentService {
         BufferedReader reader = null;
         StringBuilder buffer = new StringBuilder();
 
-        String plot = "short";
+        String plot = "full";
         String format = "json";
 
         try {
@@ -243,16 +243,22 @@ public class GeekNotesImdbService extends IntentService {
         final String IMDB_RATING = "imdbRating";
         final String IMDB_PLOT = "Plot";
         final String IMDB_POSTER = "Poster";
+        final String IMDB_YEAR = "Year";
+        final String IMDB_DIRECTOR = "Director";
 
         try {
             JSONObject jsonObject = new JSONObject(imdbJsonStr);
             String rating = jsonObject.getString(IMDB_RATING);
             String plot = jsonObject.getString(IMDB_PLOT);
             String poster = jsonObject.getString(IMDB_POSTER);
+            String year = jsonObject.getString(IMDB_YEAR);
+            String director = jsonObject.getString(IMDB_DIRECTOR);
 
             String dbPlot = ((plot) != null && !plot.equals("")) ? plot : "";
             String dbRating = ((rating) != null && !rating.equals("N/A")) ? rating : "";
             String dbPoster = ((poster) != null && !poster.equals("") ? poster : "");
+            String dbYear = ((year) != null && !year.equals("") ? year : "");
+            String dbDirector = ((director) != null && !director.equals("") && !director.equals("N/A") ? director : "");
 
             Log.w("TAAAAAAAAAAAAAAAG Plot", plot);
 
@@ -260,6 +266,8 @@ public class GeekNotesImdbService extends IntentService {
             noteValues.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_INFO, dbPlot);
             noteValues.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_RANK, dbRating);
             noteValues.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_POSTERLINK, dbPoster);
+            noteValues.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_YEAR, dbYear);
+            noteValues.put(GeekNotesContract.GeekEntry.COLUMN_INFO, dbDirector);
 
             getContentResolver().update(GeekNotesContract.GeekEntry.CONTENT_URI, noteValues,
                     GeekNotesContract.GeekEntry.COLUMN_TITLE + "=?", new String[] {originalTitle});

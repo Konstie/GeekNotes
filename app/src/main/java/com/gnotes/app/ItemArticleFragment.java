@@ -40,7 +40,8 @@ public class
     static final int COL_GEEKNOTE_ARTICLE_INFO = 5;
     static final int COL_GEEKNOTE_ARTICLE_RANK = 7;
     static final int COL_GEEKNOTE_ARTICLE_IMDB_INFO = 8;
-    static final int COL_GEEKNOTE_POSTERLINK = 9;
+    static final int COL_GEEKNOTE_ARTICLE_YEAR = 9;
+    static final int COL_GEEKNOTE_POSTERLINK = 10;
 
     private View mToolbarView;
     private ImageButton searchButton;
@@ -53,10 +54,12 @@ public class
     private String mImdbPlot;
     private String mImdbRating;
     private String mImdbPosterLink;
+    private String mImdbYear;
 
     private TextView tvInfo;
     private TextView tvRating;
     private TextView tvImdbPlot;
+    private TextView tvYear;
     private ImageView imgThumbnail;
 
     private WikiReceiver wikiReceiver;
@@ -107,6 +110,7 @@ public class
         tvInfo = (TextView) rootView.findViewById(R.id.wikiInfo);
         tvRating = (TextView) rootView.findViewById(R.id.imdbRank);
         tvImdbPlot = (TextView) rootView.findViewById(R.id.imdbPlot);
+        tvYear = (TextView) rootView.findViewById(R.id.imdbYear);
 
         searchButton = (ImageButton) rootView.findViewById(R.id.fab);
         searchButton.invalidate();
@@ -117,13 +121,15 @@ public class
             mImdbRating = savedInstanceState.getString("IMDB_RATING");
             mImdbPosterLink = savedInstanceState.getString("IMDB_POSTER");
             mImdbPlot = savedInstanceState.getString("IMDB_PLOT");
+            mImdbYear = savedInstanceState.getString("IMDB_YEAR");
 
             tvInfo.setText(mPlot);
             if (mPlot != null && !mPlot.equals("") && !mPlot.equals(SECRET_CODE)) {
                 tvInfo.setVisibility(View.VISIBLE);
             }
-            tvRating.setText("Рейтинг IMDB: " + mImdbRating);
-            tvImdbPlot.setText("Сюжет (англ.): " + mImdbPlot);
+            tvRating.setText(getResources().getString(R.string.article_rating) + mImdbRating);
+            tvYear.setText(getResources().getString(R.string.article_year) + mImdbYear);
+            tvImdbPlot.setText(getResources().getString(R.string.article_plot) + mImdbPlot);
             if (mImdbPosterLink != null && !mImdbPosterLink.equals("") && isOnline()) {
                 Log.w("IMDB Tag", mImdbPosterLink);
                 Picasso.with(getActivity())
@@ -230,6 +236,8 @@ public class
                             ? cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO) : "";
                     mImdbRating = (cursor.getString(COL_GEEKNOTE_ARTICLE_RANK) != null)
                             ? cursor.getString(COL_GEEKNOTE_ARTICLE_RANK) : "";
+                    mImdbYear = (cursor.getString(COL_GEEKNOTE_ARTICLE_YEAR) != null)
+                            ? cursor.getString(COL_GEEKNOTE_ARTICLE_YEAR) : "";
                     mImdbPosterLink = (cursor.getString(COL_GEEKNOTE_POSTERLINK) != null)
                             ? cursor.getString(COL_GEEKNOTE_POSTERLINK) : "";
 
@@ -238,6 +246,8 @@ public class
                         tvImdbPlot.setText(getResources().getString(R.string.article_plot) + mImdbPlot);
                         tvRating.setVisibility(View.VISIBLE);
                         tvRating.setText(getResources().getString(R.string.article_rating) + mImdbRating);
+                        tvYear.setVisibility(View.VISIBLE);
+                        tvYear.setText(getResources().getString(R.string.article_year) + mImdbYear);
                     }
                 }
             }
@@ -295,8 +305,10 @@ public class
                 } else {
                     tvImdbPlot.setText(getResources().getString(R.string.article_plot) + mImdbPlot);
                     tvRating.setText(getResources().getString(R.string.article_rating) + mImdbRating);
+                    tvYear.setText(getResources().getString(R.string.article_year) + mImdbYear);
                     tvImdbPlot.setVisibility(View.VISIBLE);
                     tvRating.setVisibility(View.VISIBLE);
+                    tvYear.setVisibility(View.VISIBLE);
                 }
 
                 if (mPlot == null || mPlot.equals("") && !mPlot.equals(SECRET_CODE)) {
@@ -371,5 +383,6 @@ public class
         outState.putString("IMDB_RATING", mImdbRating);
         outState.putString("IMDB_POSTER", mImdbPosterLink);
         outState.putString("IMDB_PLOT", mImdbPlot);
+        outState.putString("IMDB_YEAR", mImdbYear);
     }
 }

@@ -78,15 +78,14 @@ public class NewNoteActivity extends AppCompatActivity {
     private AdapterView.OnItemSelectedListener onCatSpinnerListener = new AdapterView.OnItemSelectedListener() {
         public void onItemSelected(AdapterView<?> parent, View view, int pos,
                                    long id) {
-            if (mSpinner.getSelectedItem().equals(categories.get(0))) {
-                mDescriptionTitle.setText(resources.getString(R.string.cat_author));
-            } else if (mSpinner.getSelectedItem().equals(categories.get(1)) ||
+            if (mSpinner.getSelectedItem().equals(categories.get(0)) ||
                     mSpinner.getSelectedItem().equals(categories.get(7))) {
-                mDescriptionTitle.setText(resources.getString(R.string.cat_director));
-            } else if (mSpinner.getSelectedItem().equals(categories.get(3)) ||
+                mDescriptionTitle.setText(resources.getString(R.string.cat_author));
+            } else if (mSpinner.getSelectedItem().equals(categories.get(1))||
+                    mSpinner.getSelectedItem().equals(categories.get(3)) ||
                     mSpinner.getSelectedItem().equals(categories.get(4)) ||
                     mSpinner.getSelectedItem().equals(categories.get(2))) {
-                mDescriptionTitle.setText(resources.getString(R.string.cat_studio));
+                mDescriptionTitle.setText(resources.getString(R.string.cat_director));
             } else if (mSpinner.getSelectedItem().equals(categories.get(5))) {
                 mDescriptionTitle.setText(resources.getString(R.string.cat_genre));
             } else if (mSpinner.getSelectedItem().equals(categories.get(6))) {
