@@ -8,12 +8,6 @@
     <string name="menu_archive">Архив</string>
     <string name="menu_exit">Выход</string>
 
-    <string-array name="menu_items">
-        <item>Добавить заметку</item>
-        <item>Настройки</item>
-        <item>Выход</item>
-    </string-array>
-
     <string-array name="categories">
         <item>Книга</item>
         <item>Фильм</item>
@@ -50,6 +44,7 @@
     <string name="new_extrainfo">Дополнительная информация:</string>
 
     <string name="card_extra">Дополнительно:</string>
+
     <string name="cats_all">Все</string>
     <string name="cats_archive">Архив</string>
 

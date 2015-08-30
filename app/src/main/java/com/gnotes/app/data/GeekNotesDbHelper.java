@@ -55,8 +55,8 @@ public class GeekNotesDbHelper {
                 new String[]{itemTitle});
     }
 
-    public Cursor getAllData(boolean isArchived) {
-        int archived = isArchived ? 1 : 0;
+    public Cursor getAllData(boolean allArchived) {
+        int archived = allArchived ? 1 : 0;
         String buildSQL = "SELECT * FROM " + GeekNotesContract.GeekEntry.TABLE_NAME +
                 " WHERE " + GeekNotesContract.GeekEntry.COLUMN_ARCHIVED + " = " + archived +
                 " ORDER BY " + GeekNotesContract.GeekEntry._ID + " DESC";
@@ -69,9 +69,12 @@ public class GeekNotesDbHelper {
         return database.rawQuery(buildSQL, new String[] {title});
     }
 
-    public Cursor getItemsByCategory(String categoryName) {
-        String buildSQL = "SELECT * FROM " + GeekNotesContract.GeekEntry.TABLE_NAME + " WHERE TRIM("
-                + GeekNotesContract.GeekEntry.COLUMN_CATEGORY + ") = '" + categoryName.trim() + "' ORDER BY " + GeekNotesContract.GeekEntry._ID + " DESC";
+    public Cursor getItemsByCategory(String categoryName, boolean allArchived) {
+        int archived = allArchived ? 1 : 0;
+        String buildSQL = "SELECT * FROM " + GeekNotesContract.GeekEntry.TABLE_NAME +
+                " WHERE (TRIM(" + GeekNotesContract.GeekEntry.COLUMN_CATEGORY + ") = '" +
+                categoryName.trim() + "') AND (" + GeekNotesContract.GeekEntry.COLUMN_ARCHIVED +
+                " = " + archived + ") ORDER BY " + GeekNotesContract.GeekEntry._ID + " DESC";
         return database.rawQuery(buildSQL, null);
     }
 

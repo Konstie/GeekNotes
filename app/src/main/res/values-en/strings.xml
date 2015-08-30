@@ -47,8 +47,11 @@ nearest future — and, what is really exciting — get info about them immediat
     <string name="card_extra">Info:</string>
 
     <string name="cats_all">All</string>
+    <string name="cats_archive">Archive</string>
+
     <string name="dialog_change_note">Change note</string>
     <string name="dialog_save">Save</string>
+    <string name="dialog_cancel">Cancel</string>
 
     <string name="msg_note_destroyed">Note «%1$s» exterminated</string>
     <string name="msg_search_warning">Check your connection.

@@ -34,6 +34,7 @@ public class GeekNotesFragment extends Fragment {
     private Resources resources;
 
     private List<String> filterCats;
+    private String mCategory;
 
     private GeekNotesDbHelper dbHelper;
     private GeekNotesAdapter adapter;
@@ -51,6 +52,7 @@ public class GeekNotesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         resources = getResources();
+        mCategory = resources.getString(R.string.cats_all);
 
         filterCats = new ArrayList<>(Arrays.asList(resources.getStringArray(R.array.categories)));
         filterCats.add(0, resources.getString(R.string.cats_all));
@@ -75,6 +77,10 @@ public class GeekNotesFragment extends Fragment {
         ToolbarSpinnerAdapter spinnerAdapter = new ToolbarSpinnerAdapter();
         spinnerAdapter.addItems(filterCats);
 
+        if (savedInstanceState != null) {
+            mCategory = savedInstanceState.getString("CATEGORY");
+        }
+
         filterSpinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
         filterSpinner.setAdapter(spinnerAdapter);
 
@@ -87,8 +93,17 @@ public class GeekNotesFragment extends Fragment {
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         dbHelper = new GeekNotesDbHelper(getActivity());
-        adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(ARCHIVE_STATE_FLAG), 0);
-        adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
+
+        Cursor cursor;
+        if (mCategory.equals(resources.getString(R.string.cats_all))) {
+            cursor = dbHelper.getAllData(ARCHIVE_STATE_FLAG);
+        } else {
+            cursor = dbHelper.getItemsByCategory(mCategory, ARCHIVE_STATE_FLAG);
+        }
+        cursor.requery();
+
+        adapter = new GeekNotesAdapter(getActivity(), cursor, 0);
+        adapter.changeCursor(cursor);
         adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
 
@@ -102,7 +117,9 @@ public class GeekNotesFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     toolbar.setBackgroundColor(getResources().getColor(R.color.primary_dark));
                 } else {
-                    adapter = new GeekNotesAdapter(getActivity(), dbHelper.getItemsByCategory(chosenCategory), 0);
+                    adapter = new GeekNotesAdapter(getActivity(), dbHelper.getItemsByCategory(
+                            chosenCategory, ARCHIVE_STATE_FLAG), 0
+                    );
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     toolbar.setBackgroundColor(getResources().getColor(R.color.primary_dark));
@@ -174,7 +191,9 @@ public class GeekNotesFragment extends Fragment {
                                         if (filterSpinner.getSelectedItem().toString().equals(filterCats.get(0))) {
                                             adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
                                         } else {
-                                            adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
+                                            adapter.changeCursor(dbHelper.getItemsByCategory(
+                                                    filterSpinner.getSelectedItem().toString(), ARCHIVE_STATE_FLAG)
+                                            );
                                         }
                                         adapter.notifyDataSetChanged();
                                     }
@@ -189,7 +208,8 @@ public class GeekNotesFragment extends Fragment {
                         mEditTitle.setText(itemTitle);
 
                         mTextField = (TextView) dialog.getCustomView().findViewById(R.id.edit_fieldname);
-                        TextView itemExtraField = (TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.extra_type);
+                        TextView itemExtraField = (TextView) listView.getChildAt(i -
+                                listView.getFirstVisiblePosition()).findViewById(R.id.extra_type);
                         String extraField = itemExtraField.getText().toString();
                         if (extraField.equals("")) {
                             mTextField.setText("");
@@ -197,7 +217,8 @@ public class GeekNotesFragment extends Fragment {
                             mTextField.setText(extraField);
                         }
 
-                        String extraValue = ((TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.extra_info))
+                        String extraValue = ((TextView) listView.getChildAt(i -
+                                listView.getFirstVisiblePosition()).findViewById(R.id.extra_info))
                                 .getText().toString();
 
                         mEditInfo = (EditText) dialog.getCustomView().findViewById(R.id.edit_info);
@@ -209,7 +230,8 @@ public class GeekNotesFragment extends Fragment {
                         dialogSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
                         mSpinnerEditCategory.setAdapter(dialogSpinnerAdapter);
 
-                        String currentItemCategory = ((TextView) listView.getChildAt(i - listView.getFirstVisiblePosition()).findViewById(R.id.category))
+                        String currentItemCategory = ((TextView) listView.getChildAt(i -
+                                listView.getFirstVisiblePosition()).findViewById(R.id.category))
                                 .getText().toString();
 
                         mSpinnerEditCategory.setSelection(filterCats.indexOf(currentItemCategory) - 1);
@@ -224,7 +246,9 @@ public class GeekNotesFragment extends Fragment {
                         if (filterSpinner.getSelectedItem().toString().equals(resources.getString(R.string.cats_all))) {
                             adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
                         } else {
-                            adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
+                            adapter.changeCursor(dbHelper.getItemsByCategory(
+                                    filterSpinner.getSelectedItem().toString(), ARCHIVE_STATE_FLAG)
+                            );
                         }
                         adapter.notifyDataSetChanged();
                         break;
@@ -299,13 +323,25 @@ public class GeekNotesFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() { // update list elements immediately
-        super.onResume();
+//    @Override
+//    public void onResume() { // update list elements immediately
+//        super.onResume();
+//
+//        String currentCategory = filterSpinner.getSelectedItem().toString();
+//        Cursor c;
+//        if (currentCategory.equals("Все")) {
+//            c = dbHelper.getAllData(ARCHIVE_STATE_FLAG);
+//        } else {
+//            c = dbHelper.getItemsByCategory(currentCategory, ARCHIVE_STATE_FLAG);
+//        }
+//        c.requery();
+//        adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
+//        adapter.notifyDataSetChanged();
+//    }
 
-        Cursor c = dbHelper.getAllData(ARCHIVE_STATE_FLAG);
-        c.requery();
-        adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
-        adapter.notifyDataSetChanged();
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("CATEGORY", filterSpinner.getSelectedItem().toString());
     }
 }
