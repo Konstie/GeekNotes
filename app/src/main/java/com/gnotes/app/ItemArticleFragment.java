@@ -290,6 +290,7 @@ public class
                 mPlot = cursor.getString(COL_GEEKNOTE_ARTICLE_INFO);
                 mImdbPlot = cursor.getString(COL_GEEKNOTE_ARTICLE_IMDB_INFO);
                 mImdbRating = cursor.getString(COL_GEEKNOTE_ARTICLE_RANK);
+                mImdbYear = cursor.getString(COL_GEEKNOTE_ARTICLE_YEAR);
                 mImdbPosterLink = cursor.getString(COL_GEEKNOTE_POSTERLINK);
             }
         }

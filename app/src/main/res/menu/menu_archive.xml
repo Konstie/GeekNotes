@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".GeekNotesActivity">
     <item android:id="@+id/action_delete_wiki"
-          android:title="@string/action_delete_wrong_wiki"
+          android:title="@string/action_delete_all"
           android:icon="@mipmap/ic_action_delete"
           android:orderInCategory="100"
           app:showAsAction="always"/>

@@ -30,6 +30,7 @@ public class GeekNotesDbHelper {
         cv.put(GeekNotesContract.GeekEntry.COLUMN_CATEGORY, category);
         cv.put(GeekNotesContract.GeekEntry.COLUMN_INFOTYPE, extraField);
         cv.put(GeekNotesContract.GeekEntry.COLUMN_INFO, extraInfo);
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARCHIVED, 0);
         database.insert(GeekNotesContract.GeekEntry.TABLE_NAME, null, cv);
     }
 
@@ -49,14 +50,16 @@ public class GeekNotesDbHelper {
 
     public void resetWikipediaArticlePlot(String itemTitle) {
         ContentValues cv = new ContentValues();
-        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO, "42. Просто 42."); // заглушка
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARTICLE_INFO, "42. Just 42."); // заглушка
         database.update(GeekNotesContract.GeekEntry.TABLE_NAME, cv, GeekNotesContract.GeekEntry.COLUMN_TITLE + " = ?",
                 new String[]{itemTitle});
     }
 
-    public Cursor getAllData() {
-        String buildSQL = "SELECT * FROM " + GeekNotesContract.GeekEntry.TABLE_NAME + " ORDER BY "
-                + GeekNotesContract.GeekEntry._ID + " DESC";
+    public Cursor getAllData(boolean isArchived) {
+        int archived = isArchived ? 1 : 0;
+        String buildSQL = "SELECT * FROM " + GeekNotesContract.GeekEntry.TABLE_NAME +
+                " WHERE " + GeekNotesContract.GeekEntry.COLUMN_ARCHIVED + " = " + archived +
+                " ORDER BY " + GeekNotesContract.GeekEntry._ID + " DESC";
         return database.rawQuery(buildSQL, null);
     }
 
@@ -72,9 +75,23 @@ public class GeekNotesDbHelper {
         return database.rawQuery(buildSQL, null);
     }
 
+    public void makeArchived(String title, boolean isArchived) {
+        int archived = isArchived ? 1 : 0;
+        ContentValues cv = new ContentValues();
+        cv.put(GeekNotesContract.GeekEntry.COLUMN_ARCHIVED, archived);
+        database.update(GeekNotesContract.GeekEntry.TABLE_NAME, cv, GeekNotesContract.GeekEntry.COLUMN_TITLE + " = ?",
+                new String[]{title});
+    }
+
     public void deleteByTitle(String title) {
         String[] whereArgs = new String[]{title};
         database.delete(GeekNotesContract.GeekEntry.TABLE_NAME, GeekNotesContract.GeekEntry.COLUMN_TITLE + " = ?", whereArgs);
+    }
+
+    public void clearArchive(boolean isArchived) {
+        int archived = (isArchived) ? 1 : 0;
+        String[] whereArgs = new String[]{Integer.toString(archived)};
+        database.delete(GeekNotesContract.GeekEntry.TABLE_NAME, GeekNotesContract.GeekEntry.COLUMN_ARCHIVED + " = ?", whereArgs);
     }
 
     public class DBHelper extends SQLiteOpenHelper {
@@ -86,7 +103,6 @@ public class GeekNotesDbHelper {
         public void onCreate(SQLiteDatabase database) {
             final String SQL_CREATE_NOTES_TABLE = "CREATE TABLE " + GeekNotesContract.GeekEntry.TABLE_NAME + " (" +
                     GeekNotesContract.GeekEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-
                     GeekNotesContract.GeekEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                     GeekNotesContract.GeekEntry.COLUMN_CATEGORY + " INTEGER NOT NULL, " +
                     GeekNotesContract.GeekEntry.COLUMN_INFOTYPE + " TEXT, " +
@@ -96,7 +112,9 @@ public class GeekNotesDbHelper {
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_RANK + " REAL, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_INFO + " TEXT, " +
                     GeekNotesContract.GeekEntry.COLUMN_ARTICLE_IMDB_YEAR + " INTEGER, " +
-                    GeekNotesContract.GeekEntry.COLUMN_ARTICLE_POSTERLINK + " TEXT);";
+                    GeekNotesContract.GeekEntry.COLUMN_ARTICLE_POSTERLINK + " TEXT, " +
+
+                    GeekNotesContract.GeekEntry.COLUMN_ARCHIVED + " INTEGER NOT NULL);";
 
             database.execSQL(SQL_CREATE_NOTES_TABLE);
         }

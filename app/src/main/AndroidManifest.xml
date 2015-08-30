@@ -33,6 +33,13 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".GeekNotesActivity" />
         </activity>
+        <activity
+                android:name=".ArchiveActivity"
+                android:label="@string/app_name">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".GeekNotesActivity" />
+        </activity>
         <provider
                 android:authorities="com.gnotes.app"
                 android:name=".data.GeekNotesContentProvider"

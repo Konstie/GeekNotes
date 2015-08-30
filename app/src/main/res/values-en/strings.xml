@@ -4,11 +4,9 @@
     <string name="drawer_open">Drawer opened!</string>
     <string name="drawer_closed">Drawer closed!</string>
 
-    <string-array name="menu_items">
-        <item>Add note</item>
-        <item>Settings</item>
-        <item>Exit</item>
-    </string-array>
+    <string name="menu_addnote">Add note</string>
+    <string name="menu_archive">Archive</string>
+    <string name="menu_exit">Quit</string>
 
     <string-array name="categories">
         <item>Book</item>
@@ -46,7 +44,7 @@
     <string name="dialog_change_note">Change note</string>
     <string name="dialog_save">Save</string>
 
-    <string name="msg_note_stored">Note «%1$s» exterminated</string>
+    <string name="msg_note_destroyed">Note «%1$s» exterminated</string>
     <string name="msg_search_warning">Check your connection.
 This feature is not available in offline-mode!</string>
     <string name="msg_wiki_removed">Wiki-description for a note «%1$s»
@@ -55,4 +53,10 @@ This feature is not available in offline-mode!</string>
     <string name="toolbar_new_note">New note</string>
 
     <string name="url_wikipedia">https://en.wikipedia.org/w/api.php?</string>
+    <string name="msg_note_restored">Note «%1$s» regenerated!</string>
+    <string name="msg_note_archived">Note «%1$s» archived</string>
+    <string name="action_delete_wrong_wiki">Exterminate incorrect wiki-description!</string>
+    <string name="action_delete_all">Remove all items forever!</string>
+
+    <string name="archive_clean">All notes in archive removed</string>
 </resources>

@@ -13,7 +13,6 @@ import com.gnotes.app.adapters.DrawerAdapter;
 
 public class GeekNotesActivity extends AppCompatActivity {
 
-    private String menuTitles[] = {"Новая запись", "Туториал", "Выход"};
     private int icons[] = {R.mipmap.ic_menu_add, R.mipmap.ic_action_tutorial, R.mipmap.ic_action_quit};
 
     private DrawerLayout drawerLayout;
@@ -24,6 +23,10 @@ public class GeekNotesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geek_notes);
+
+        String menuTitles[] = {getString(R.string.menu_addnote),
+                getString(R.string.menu_archive),
+                getString(R.string.menu_exit)};
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -109,7 +112,8 @@ public class GeekNotesActivity extends AppCompatActivity {
                 startActivity(newNoteIntent);
                 break;
             case 2:
-                // TODO: Tutorial overlay
+                Intent archiveIntent = new Intent(this, ArchiveActivity.class);
+                startActivity(archiveIntent);
                 break;
             case 3:
                 finish();

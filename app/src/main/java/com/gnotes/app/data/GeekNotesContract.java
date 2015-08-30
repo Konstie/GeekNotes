@@ -37,8 +37,9 @@ public class GeekNotesContract {
         public static final String COLUMN_ARTICLE_RANK = "rank";
         public static final String COLUMN_ARTICLE_IMDB_INFO = "imdb_info";
         public static final String COLUMN_ARTICLE_IMDB_YEAR = "imdb_year";
-
         public static final String COLUMN_ARTICLE_POSTERLINK = "poster";
+
+        public static final String COLUMN_ARCHIVED = "archived";
 
         public static Uri buildGeekNotesURI(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

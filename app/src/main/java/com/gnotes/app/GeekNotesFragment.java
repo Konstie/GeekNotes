@@ -29,6 +29,8 @@ import java.util.List;
 
 public class GeekNotesFragment extends Fragment {
 
+    private static final boolean ARCHIVE_STATE_FLAG = false;
+
     private Resources resources;
 
     private List<String> filterCats;
@@ -60,7 +62,7 @@ public class GeekNotesFragment extends Fragment {
                              final Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_geeknotes, parent, false);
 
-        Toolbar toolbar = (Toolbar) (getActivity()).findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) (getActivity()).findViewById(R.id.toolbar);
         ((GeekNotesActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle("");
         toolbar.setLogo(R.mipmap.tardis_icon);
@@ -85,8 +87,8 @@ public class GeekNotesFragment extends Fragment {
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         dbHelper = new GeekNotesDbHelper(getActivity());
-        adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(), 0);
-        adapter.changeCursor(dbHelper.getAllData());
+        adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(ARCHIVE_STATE_FLAG), 0);
+        adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
         adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
 
@@ -95,13 +97,15 @@ public class GeekNotesFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String chosenCategory = filterSpinner.getSelectedItem().toString();
                 if (chosenCategory.equals(filterCats.get(0))) {
-                    adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(), 0);
+                    adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(false), 0);
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
+                    toolbar.setBackgroundColor(getResources().getColor(R.color.primary_dark));
                 } else {
                     adapter = new GeekNotesAdapter(getActivity(), dbHelper.getItemsByCategory(chosenCategory), 0);
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
+                    toolbar.setBackgroundColor(getResources().getColor(R.color.primary_dark));
                 }
             }
 
@@ -168,7 +172,7 @@ public class GeekNotesFragment extends Fragment {
                                         dbHelper.updateData(itemTitle, title, info, category);
 
                                         if (filterSpinner.getSelectedItem().toString().equals(filterCats.get(0))) {
-                                            adapter.changeCursor(dbHelper.getAllData());
+                                            adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
                                         } else {
                                             adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
                                         }
@@ -213,12 +217,12 @@ public class GeekNotesFragment extends Fragment {
                         dialog.show();
                         break;
                     case 1: // remove item option
-                        dbHelper.deleteByTitle(itemTitle);
-                        Snackbar.make(getView(), String.format(resources.getString(R.string.msg_note_stored),
+                        dbHelper.makeArchived(itemTitle, true);
+                        Snackbar.make(getView(), String.format(resources.getString(R.string.msg_note_archived),
                                 itemTitle), Snackbar.LENGTH_SHORT).show();
 
                         if (filterSpinner.getSelectedItem().toString().equals(resources.getString(R.string.cats_all))) {
-                            adapter.changeCursor(dbHelper.getAllData());
+                            adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
                         } else {
                             adapter.changeCursor(dbHelper.getItemsByCategory(filterSpinner.getSelectedItem().toString()));
                         }
@@ -299,9 +303,9 @@ public class GeekNotesFragment extends Fragment {
     public void onResume() { // update list elements immediately
         super.onResume();
 
-        Cursor c = dbHelper.getAllData();
+        Cursor c = dbHelper.getAllData(ARCHIVE_STATE_FLAG);
         c.requery();
-        adapter.changeCursor(dbHelper.getAllData());
+        adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
         adapter.notifyDataSetChanged();
     }
 }

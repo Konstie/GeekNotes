@@ -4,6 +4,10 @@
     <string name="drawer_open">Drawer opened!</string>
     <string name="drawer_closed">Drawer closed!</string>
 
+    <string name="menu_addnote">Добавить заметку</string>
+    <string name="menu_archive">Архив</string>
+    <string name="menu_exit">Выход</string>
+
     <string-array name="menu_items">
         <item>Добавить заметку</item>
         <item>Настройки</item>
@@ -46,16 +50,23 @@
 
     <string name="card_extra">Дополнительно:</string>
     <string name="cats_all">Все</string>
+    <string name="cats_archive">Архив</string>
 
     <string name="dialog_change_note">Изменить заметку</string>
     <string name="dialog_save">Сохранить</string>
     <string name="dialog_cancel">Отменить</string>
 
-    <string name="msg_note_stored">Заметка «%1$s» удалена</string>
+    <string name="msg_note_destroyed">Заметка «%1$s» удалена</string>
     <string name="msg_search_warning">Проверьте ваше соединение. Эта фича недоступна в оффлайн-режиме!</string>
     <string name="msg_wiki_removed">Wiki-описание для заметки «%1$s» удалено!</string>
 
     <string name="toolbar_new_note">Новая заметка</string>
 
     <string name="url_wikipedia">https://ru.wikipedia.org/w/api.php?</string>
+    <string name="msg_note_restored">Заметка «%1$s» регенерирована</string>
+    <string name="msg_note_archived">Заметка «%1$s» отправлена в архив</string>
+    <string name="action_delete_wrong_wiki">Неправильное wiki-описание! Exterminate!</string>
+    <string name="action_delete_all">Очистить архив</string>
+
+    <string name="archive_clean">Все заметки в архиве удалены</string>
 </resources>
