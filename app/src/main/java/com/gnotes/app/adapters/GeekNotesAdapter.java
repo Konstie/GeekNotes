@@ -88,7 +88,8 @@ public class GeekNotesAdapter extends CursorAdapter {
                 category.equals("Аниме") || category.equals("Cartoon") ||
                 category.equals("Cartoon series") || category.equals("Anime")) {
             viewHolder.catIcon.setImageResource(catIcons[1]);
-        } else if (category.equals("Комикс") || category.equals("Comics")) {
+        } else if (category.equals("Комикс") || category.equals("Comics") ||
+                category.equals("Манга") || category.equals("Manga")) {
             viewHolder.catIcon.setImageResource(catIcons[2]);
         } else if (category.equals("Игра") || category.equals("Game")) {
             viewHolder.catIcon.setImageResource(catIcons[3]);

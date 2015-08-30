@@ -110,15 +110,15 @@ public class GeekNotesFragment extends Fragment {
         filterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String chosenCategory = filterSpinner.getSelectedItem().toString();
-                if (chosenCategory.equals(filterCats.get(0))) {
+                mCategory = filterSpinner.getSelectedItem().toString();
+                if (mCategory.equals(filterCats.get(0))) {
                     adapter = new GeekNotesAdapter(getActivity(), dbHelper.getAllData(false), 0);
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     toolbar.setBackgroundColor(getResources().getColor(R.color.primary_dark));
                 } else {
                     adapter = new GeekNotesAdapter(getActivity(), dbHelper.getItemsByCategory(
-                            chosenCategory, ARCHIVE_STATE_FLAG), 0
+                            mCategory, ARCHIVE_STATE_FLAG), 0
                     );
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -323,21 +323,21 @@ public class GeekNotesFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onResume() { // update list elements immediately
-//        super.onResume();
-//
-//        String currentCategory = filterSpinner.getSelectedItem().toString();
-//        Cursor c;
-//        if (currentCategory.equals("Все")) {
-//            c = dbHelper.getAllData(ARCHIVE_STATE_FLAG);
-//        } else {
-//            c = dbHelper.getItemsByCategory(currentCategory, ARCHIVE_STATE_FLAG);
-//        }
-//        c.requery();
-//        adapter.changeCursor(dbHelper.getAllData(ARCHIVE_STATE_FLAG));
-//        adapter.notifyDataSetChanged();
-//    }
+    @Override
+    public void onResume() { // update list elements immediately
+        super.onResume();
+
+        Cursor c;
+        if (mCategory.equals(resources.getString(R.string.cats_all))) {
+            c = dbHelper.getAllData(ARCHIVE_STATE_FLAG);
+        } else {
+            c = dbHelper.getItemsByCategory(mCategory, ARCHIVE_STATE_FLAG);
+        }
+        c.requery();
+        adapter.changeCursor(c);
+        adapter.notifyDataSetChanged();
+        listView.setAdapter(adapter);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

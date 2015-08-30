@@ -79,7 +79,8 @@ public class NewNoteActivity extends AppCompatActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int pos,
                                    long id) {
             if (mSpinner.getSelectedItem().equals(categories.get(0)) ||
-                    mSpinner.getSelectedItem().equals(categories.get(7))) {
+                    mSpinner.getSelectedItem().equals(categories.get(7)) ||
+                    mSpinner.getSelectedItem().equals(categories.get(8))) {
                 mDescriptionTitle.setText(resources.getString(R.string.cat_author));
             } else if (mSpinner.getSelectedItem().equals(categories.get(1))||
                     mSpinner.getSelectedItem().equals(categories.get(3)) ||
@@ -90,7 +91,7 @@ public class NewNoteActivity extends AppCompatActivity {
                 mDescriptionTitle.setText(resources.getString(R.string.cat_genre));
             } else if (mSpinner.getSelectedItem().equals(categories.get(6))) {
                 mDescriptionTitle.setText(resources.getString(R.string.cat_platform));
-            } else if (mSpinner.getSelectedItem().equals(categories.get(8))) {
+            } else if (mSpinner.getSelectedItem().equals(categories.get(9))) {
                 mDescriptionTitle.setText(resources.getString(R.string.cat_studirector));
             }
         }

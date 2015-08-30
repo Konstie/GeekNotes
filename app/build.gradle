@@ -56,4 +56,5 @@ dependencies {
     compile(name: 'android-observablescrollview-1.5.0', ext:'aar')
     compile(name: 'material-dialogs-0.7.7.0', ext:'aar')
     compile 'com.baoyz.swipemenulistview:library:1.1.0'
+    compile 'com.github.ganfra:material-spinner:1.1.0'
 }
