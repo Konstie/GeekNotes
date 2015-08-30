@@ -38,6 +38,12 @@
 
     <string name="new_extrainfo">Extra info:</string>
 
+    <string name="empty_list_description">It\'s empty in here, but you are the one! You are the one, who may add the
+first note about any book, movie, computer game, music artist and many other cool geeky stuff, which you were
+advised by friends or relatives or found on the Internet and want to read, watch or play it in the
+nearest future — and, what is really exciting — get info about them immediately without using browser and googling it.
+    </string>
+
     <string name="card_extra">Info:</string>
 
     <string name="cats_all">All</string>

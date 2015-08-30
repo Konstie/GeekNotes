@@ -11,12 +11,6 @@ import com.gnotes.app.data.GeekNotesContract;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Iterator;
 
 public class GeekNotesWikiService extends IntentService {
@@ -33,8 +27,7 @@ public class GeekNotesWikiService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String itemTitle = intent.getStringExtra("ITEM_TITLE");
 
-        String wikiArticleJsonStr = connectToWiki(itemTitle);
-        getWikiArticle(itemTitle, wikiArticleJsonStr);
+        getWikiArticle(itemTitle, getJsonInfoFromWiki(itemTitle));
 
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(ItemArticleFragment.ImdbReceiver.ACTION_IMDB_RESP);
@@ -42,73 +35,33 @@ public class GeekNotesWikiService extends IntentService {
         sendBroadcast(broadcastIntent);
     }
 
-    private String connectToWiki(String itemTitle) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-        StringBuilder buffer = new StringBuilder();
-
+    private String getJsonInfoFromWiki(String itemTitle) {
         String format = "json";
         String action = "query";
         String prop = "extracts";
 
-        try {
-            final String WIKI_BASE_URL_RU = getString(R.string.url_wikipedia);
+        final String WIKI_BASE_URL_RU = getString(R.string.url_wikipedia);
 
-            final String WIKI_PARAM_FORMAT = "format";
-            final String WIKI_PARAM_ACTION = "action";
-            final String WIKI_PARAM_PROP = "prop";
-            final String WIKI_PARAM_EXINTRO = "exintro";
-            final String WIKI_PARAM_EXPLAINTEXT = "explaintext";
-            final String WIKI_PARAM_TITLES = "titles";
+        final String WIKI_PARAM_FORMAT = "format";
+        final String WIKI_PARAM_ACTION = "action";
+        final String WIKI_PARAM_PROP = "prop";
+        final String WIKI_PARAM_EXINTRO = "exintro";
+        final String WIKI_PARAM_EXPLAINTEXT = "explaintext";
+        final String WIKI_PARAM_TITLES = "titles";
 
-            Uri wikiURI = Uri.parse(WIKI_BASE_URL_RU)
-                    .buildUpon()
-                    .appendQueryParameter(WIKI_PARAM_FORMAT, format)
-                    .appendQueryParameter(WIKI_PARAM_ACTION, action)
-                    .appendQueryParameter(WIKI_PARAM_PROP, prop)
-                    .appendQueryParameter(WIKI_PARAM_EXINTRO, "")
-                    .appendQueryParameter(WIKI_PARAM_EXPLAINTEXT, "")
-                    .appendQueryParameter(WIKI_PARAM_TITLES, itemTitle)
-                    .build();
+        Uri wikiURI = Uri.parse(WIKI_BASE_URL_RU)
+                .buildUpon()
+                .appendQueryParameter(WIKI_PARAM_FORMAT, format)
+                .appendQueryParameter(WIKI_PARAM_ACTION, action)
+                .appendQueryParameter(WIKI_PARAM_PROP, prop)
+                .appendQueryParameter(WIKI_PARAM_EXINTRO, "")
+                .appendQueryParameter(WIKI_PARAM_EXPLAINTEXT, "")
+                .appendQueryParameter(WIKI_PARAM_TITLES, itemTitle)
+                .build();
 
-            URL url = new URL(wikiURI.toString());
+        String jsonInfo = ConnectionUtils.connect(wikiURI);
 
-            Log.w(TAG, wikiURI.toString());
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            if (inputStream == null) {
-                return "";
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-
-            if (buffer.length() == 0) {
-                return "";
-            }
-        } catch (IOException exc) {
-            Log.e(TAG, "Terrible I/O exception occured", exc);
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException exc) {
-                    Log.e(TAG, "Error closing URL connection", exc);
-                }
-            }
-        }
-        return buffer.toString();
+        return jsonInfo;
     }
 
     private void getWikiArticle(String originalTitle, String wikiArticleJsonStr) {

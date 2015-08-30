@@ -6,16 +6,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_below="@id/toolbar"
-            android:id="@+id/empty_description"
-            android:text="@string/empty_list_description"
-            android:layout_margin="4dp"
-            android:layout_centerHorizontal="true"/>
-
     <com.baoyz.swipemenulistview.SwipeMenuListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

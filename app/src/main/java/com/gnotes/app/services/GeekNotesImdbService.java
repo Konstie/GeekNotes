@@ -35,11 +35,9 @@ public class GeekNotesImdbService extends IntentService {
 
         engTranlation = itemTitle;
 
-        String lingvoJsonStr = connectToWiki(itemTitle);
-        getWikiTranslation(itemTitle, lingvoJsonStr);
+        getWikiTranslation(itemTitle, getJsonInfoForWikiTranslation(itemTitle));
 
-        String imdbJsonStr = connectToImdb(engTranlation);
-        getImdbStuff(itemTitle, imdbJsonStr);
+        getImdbStuff(itemTitle, getJsonFromImdb(engTranlation));
 
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(ItemArticleFragment.ImdbReceiver.ACTION_IMDB_RESP);
@@ -47,76 +45,35 @@ public class GeekNotesImdbService extends IntentService {
         sendBroadcast(broadcastIntent);
     }
 
-
-    private String connectToWiki(String itemTitle) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-        StringBuilder buffer = new StringBuilder();
-
+    private String getJsonInfoForWikiTranslation(String itemTitle) {
         String format = "json";
         String action = "query";
         String prop = "langlinks";
         String lllang = "en";
         String lllimit = "100";
 
-        try {
-            final String WIKI_BASE_URL_RU = "https://ru.wikipedia.org/w/api.php?";
+        final String WIKI_BASE_URL_RU = "https://ru.wikipedia.org/w/api.php?";
 
-            final String WIKI_PARAM_FORMAT = "format";
-            final String WIKI_PARAM_ACTION = "action";
-            final String WIKI_PARAM_PROP = "prop";
-            final String WIKI_PARAM_LANG = "lllang";
-            final String WIKI_PARAM_LIMIT = "lllimit";
-            final String WIKI_PARAM_TITLES = "titles";
+        final String WIKI_PARAM_FORMAT = "format";
+        final String WIKI_PARAM_ACTION = "action";
+        final String WIKI_PARAM_PROP = "prop";
+        final String WIKI_PARAM_LANG = "lllang";
+        final String WIKI_PARAM_LIMIT = "lllimit";
+        final String WIKI_PARAM_TITLES = "titles";
 
-            Uri wikiURI = Uri.parse(WIKI_BASE_URL_RU)
-                    .buildUpon()
-                    .appendQueryParameter(WIKI_PARAM_FORMAT, format)
-                    .appendQueryParameter(WIKI_PARAM_ACTION, action)
-                    .appendQueryParameter(WIKI_PARAM_PROP, prop)
-                    .appendQueryParameter(WIKI_PARAM_LANG, lllang)
-                    .appendQueryParameter(WIKI_PARAM_LIMIT, lllimit)
-                    .appendQueryParameter(WIKI_PARAM_TITLES, itemTitle)
-                    .build();
+        Uri wikiURI = Uri.parse(WIKI_BASE_URL_RU)
+                .buildUpon()
+                .appendQueryParameter(WIKI_PARAM_FORMAT, format)
+                .appendQueryParameter(WIKI_PARAM_ACTION, action)
+                .appendQueryParameter(WIKI_PARAM_PROP, prop)
+                .appendQueryParameter(WIKI_PARAM_LANG, lllang)
+                .appendQueryParameter(WIKI_PARAM_LIMIT, lllimit)
+                .appendQueryParameter(WIKI_PARAM_TITLES, itemTitle)
+                .build();
 
-            URL url = new URL(wikiURI.toString());
+        String jsonInfo = ConnectionUtils.connect(wikiURI);
 
-            Log.w(TAG, wikiURI.toString());
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            if (inputStream == null) {
-                return "";
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-
-            if (buffer.length() == 0) {
-                return "";
-            }
-        } catch (IOException exc) {
-            Log.e(TAG, "Terrible I/O exception occured", exc);
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException exc) {
-                    Log.e(TAG, "Error closing URL connection", exc);
-                }
-            }
-        }
-        return buffer.toString();
+        return jsonInfo;
     }
 
     private void getWikiTranslation(String originalTitle, String wikiArticleJsonStr) {
@@ -170,72 +127,28 @@ public class GeekNotesImdbService extends IntentService {
         }
     }
 
-    private String connectToImdb(String itemTitle) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-        StringBuilder buffer = new StringBuilder();
-
+    private String getJsonFromImdb(String itemTitle) {
         String plot = "full";
         String format = "json";
 
-        try {
-            final String IMDB_BASE_URL = "http://www.omdbapi.com/?";
+        final String IMDB_BASE_URL = "http://www.omdbapi.com/?";
 
-            final String IMDB_PARAM_TITLE = "t";
-            final String IMDB_PARAM_YEAR = "y";
-            final String IMDB_PARAM_PLOT = "plot";
-            final String IMDB_PARAM_FORMAT = "r";
+        final String IMDB_PARAM_TITLE = "t";
+        final String IMDB_PARAM_YEAR = "y";
+        final String IMDB_PARAM_PLOT = "plot";
+        final String IMDB_PARAM_FORMAT = "r";
 
-            Uri imdbURI = Uri.parse(IMDB_BASE_URL)
-                    .buildUpon()
-                    .appendQueryParameter(IMDB_PARAM_TITLE, itemTitle)
-                    .appendQueryParameter(IMDB_PARAM_YEAR, "")
-                    .appendQueryParameter(IMDB_PARAM_PLOT, plot)
-                    .appendQueryParameter(IMDB_PARAM_FORMAT, format)
-                    .build();
+        Uri imdbURI = Uri.parse(IMDB_BASE_URL)
+                .buildUpon()
+                .appendQueryParameter(IMDB_PARAM_TITLE, itemTitle)
+                .appendQueryParameter(IMDB_PARAM_YEAR, "")
+                .appendQueryParameter(IMDB_PARAM_PLOT, plot)
+                .appendQueryParameter(IMDB_PARAM_FORMAT, format)
+                .build();
 
-            URL url = new URL(imdbURI.toString());
+        String jsonInfo = ConnectionUtils.connect(imdbURI);
 
-            Log.w("Taaaaaaag IMDB", imdbURI.toString());
-
-            Log.w(TAG, imdbURI.toString());
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-
-            if (inputStream == null) {
-                return "";
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line).append("\n");
-            }
-
-            if (buffer.length() == 0) {
-                return "";
-            }
-
-        } catch (IOException exc) {
-            Log.e(TAG, "Terrible I/O exception occured", exc);
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException exc) {
-                    Log.e(TAG, "Error closing URL connection", exc);
-                }
-            }
-        }
-        return buffer.toString();
+        return jsonInfo;
     }
 
     private void getImdbStuff(String originalTitle, String imdbJsonStr) {
