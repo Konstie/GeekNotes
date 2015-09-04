@@ -1,10 +1,12 @@
 package com.gnotes.app;
 
+import android.annotation.TargetApi;
 import android.content.*;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -115,6 +117,9 @@ public class
         searchButton = (ImageButton) rootView.findViewById(R.id.fab);
         searchButton.invalidate();
         searchButton.bringToFront();
+        if (Build.VERSION.SDK_INT >= 21) {
+            searchButton.setZ(1000f);
+        }
 
         if (savedInstanceState != null) {
             mPlot = savedInstanceState.getString("WIKI_INFO");

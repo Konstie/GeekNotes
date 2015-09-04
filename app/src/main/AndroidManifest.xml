@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gnotes.app" >
+    package="com.gnotes.app"
+            android:versionCode="2"
+            android:versionName="1.0.1">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -11,13 +13,14 @@
             android:normalScreens="true"
             android:largeScreens="true"
             android:xlargeScreens="false"
-            android:anyDensity="false"/>
+            android:anyDensity="true"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:backupAgent=".sync.DbBackupAgent">
         <activity
             android:name=".GeekNotesActivity"
             android:label="@string/app_name" >
@@ -56,6 +59,9 @@
 
         <service android:name=".services.GeekNotesImdbService"/>
 
+        <meta-data
+                android:name="com.google.android.backup.api_key"
+                android:value="AEdPqrEAAAAIvtGioqaXN6fJpkwVPYohSTEKBFRibKaZ6ZNadw" />
     </application>
 
 </manifest>

@@ -2,7 +2,8 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="0dp">
         <include
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar_main"
@@ -12,7 +13,6 @@
         <android.support.v4.widget.DrawerLayout
                 android:id="@+id/drawerLayout"
                 android:elevation="7sp"
-                android:layout_below="@id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <RelativeLayout
