@@ -29,7 +29,7 @@ public class GeekNotesAdapter extends CursorAdapter {
     static final int COL_GEEKNOTE_POSTERLINK = 8;
 
     private final int[] catIcons = {R.mipmap.cat_book, R.mipmap.cat_cartoon, R.mipmap.cat_comics, R.mipmap.cat_game,
-            R.mipmap.cat_music, R.mipmap.cat_series, R.mipmap.cat_movie};
+            R.mipmap.cat_music, R.mipmap.cat_series_another, R.mipmap.cat_movies, R.mipmap.cat_anime};
 
     private String extrainfo = "";
 
@@ -85,7 +85,6 @@ public class GeekNotesAdapter extends CursorAdapter {
         if (category.equals("Книга") || category.equals("Book")) {
             viewHolder.catIcon.setImageResource(catIcons[0]);
         } else if (category.equals("Мультфильм") || category.equals("Мультсериал") ||
-                category.equals("Аниме") || category.equals("Cartoon") ||
                 category.equals("Cartoon series") || category.equals("Anime")) {
             viewHolder.catIcon.setImageResource(catIcons[1]);
         } else if (category.equals("Комикс") || category.equals("Comics") ||
@@ -97,8 +96,10 @@ public class GeekNotesAdapter extends CursorAdapter {
             viewHolder.catIcon.setImageResource(catIcons[4]);
         } else if (category.equals("Сериал") || category.equalsIgnoreCase("TV series")) {
             viewHolder.catIcon.setImageResource(catIcons[5]);
-        }  else if (category.equals("Фильм") || category.equals("Movie")) {
+        } else if (category.equals("Фильм") || category.equals("Movie")) {
             viewHolder.catIcon.setImageResource(catIcons[6]);
+        } else if (category.equals("Аниме") || category.equals("Anime")) {
+            viewHolder.catIcon.setImageResource(catIcons[7]);
         }
     }
 

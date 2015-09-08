@@ -18,4 +18,5 @@
     <color name="refresh_third">#ff7e269f</color>
 
     <color name="card_bg">#ffe0e0e0</color>
+    <color name="activity_bg">#fff1f1f1</color>
 </resources>

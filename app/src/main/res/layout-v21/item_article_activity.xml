@@ -4,13 +4,14 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/activity_bg">
 
     <FrameLayout
         android:id="@+id/item_article_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="24dp"
         tools:context="com.gnotes.app.ItemArticleActivity"
         tools:ignore="MergeRootFrame" />
 </LinearLayout>

@@ -3,7 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="0dp">
+        android:layout_marginTop="0dp"
+        android:background="@color/activity_bg">
         <include
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar_main"
@@ -14,6 +15,7 @@
                 android:id="@+id/drawerLayout"
                 android:elevation="7sp"
                 android:layout_width="match_parent"
+                android:layout_below="@id/toolbar"
                 android:layout_height="match_parent">
                 <RelativeLayout
                         xmlns:android="http://schemas.android.com/apk/res/android"

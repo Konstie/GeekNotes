@@ -11,9 +11,4 @@ public class DbBackupAgent extends BackupAgentHelper {
     public void onCreate() {
         addHelper(FILES_BACKUP_KEY, new DbBackupHelper(this, GEEKNOTES_DATABASE));
     }
-
-    /*public void requestBackup() {
-        BackupManager bm = new BackupManager(this);
-        bm.dataChanged();
-    }*/
 }

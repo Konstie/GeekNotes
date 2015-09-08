@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -32,6 +33,7 @@ public class GeekNotesFragment extends Fragment {
     private static final boolean ARCHIVE_STATE_FLAG = false;
 
     private Resources resources;
+    private int listCurrentPosition;
 
     private List<String> filterCats;
     private String mCategory;
@@ -324,6 +326,12 @@ public class GeekNotesFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        listCurrentPosition = listView.getFirstVisiblePosition();
+        super.onPause();
+    }
+
+    @Override
     public void onResume() { // update list elements immediately
         super.onResume();
 
@@ -337,6 +345,7 @@ public class GeekNotesFragment extends Fragment {
         adapter.changeCursor(c);
         adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
+        listView.setSelection(listCurrentPosition);
     }
 
     @Override

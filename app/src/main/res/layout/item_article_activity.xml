@@ -5,4 +5,5 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context="com.gnotes.app.ItemArticleActivity"
-             tools:ignore="MergeRootFrame" />
+             tools:ignore="MergeRootFrame"
+             android:background="@color/activity_bg"/>
