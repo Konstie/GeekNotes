@@ -1,4 +1,4 @@
-package com.gnotes.app;
+package com.gnotes.app.entity;
 
 import java.io.Serializable;
 

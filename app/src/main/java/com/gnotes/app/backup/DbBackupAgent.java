@@ -1,4 +1,4 @@
-package com.gnotes.app.sync;
+package com.gnotes.app.backup;
 
 import android.app.backup.BackupAgentHelper;
 

@@ -1,4 +1,4 @@
-package com.gnotes.app;
+package com.gnotes.app.ui;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -20,8 +19,9 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.gnotes.app.R;
 import com.gnotes.app.adapters.GeekNotesAdapter;
-import com.gnotes.app.data.GeekNotesDbHelper;
+import com.gnotes.app.database.GeekNotesDbHelper;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;

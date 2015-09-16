@@ -4,6 +4,6 @@
              android:id="@+id/item_article_container"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.gnotes.app.ItemArticleActivity"
+             tools:context="com.gnotes.app.ui.ItemArticleActivity"
              tools:ignore="MergeRootFrame"
              android:background="@color/activity_bg"/>

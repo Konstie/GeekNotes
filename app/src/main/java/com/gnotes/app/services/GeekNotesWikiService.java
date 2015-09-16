@@ -5,9 +5,9 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import com.gnotes.app.ItemArticleFragment;
+import com.gnotes.app.ui.ItemArticleFragment;
 import com.gnotes.app.R;
-import com.gnotes.app.data.GeekNotesContract;
+import com.gnotes.app.database.GeekNotesContract;
 import org.json.JSONException;
 import org.json.JSONObject;
 

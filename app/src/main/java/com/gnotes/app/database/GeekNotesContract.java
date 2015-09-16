@@ -1,4 +1,4 @@
-package com.gnotes.app.data;
+package com.gnotes.app.database;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;

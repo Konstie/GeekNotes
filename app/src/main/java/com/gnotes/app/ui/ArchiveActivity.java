@@ -1,4 +1,4 @@
-package com.gnotes.app;
+package com.gnotes.app.ui;
 
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -15,8 +15,9 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.gnotes.app.R;
 import com.gnotes.app.adapters.GeekNotesAdapter;
-import com.gnotes.app.data.GeekNotesDbHelper;
+import com.gnotes.app.database.GeekNotesDbHelper;
 
 public class ArchiveActivity extends AppCompatActivity {
     private static final boolean ARCHIVE_STATE_FLAG = true;

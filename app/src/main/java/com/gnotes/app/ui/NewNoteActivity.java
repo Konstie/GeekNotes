@@ -1,4 +1,4 @@
-package com.gnotes.app;
+package com.gnotes.app.ui;
 
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
+import com.gnotes.app.entity.Item;
+import com.gnotes.app.R;
 import com.melnykov.fab.FloatingActionButton;
-import com.gnotes.app.data.GeekNotesDbHelper;
+import com.gnotes.app.database.GeekNotesDbHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

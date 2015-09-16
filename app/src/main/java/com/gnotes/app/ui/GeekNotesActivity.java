@@ -1,4 +1,4 @@
-package com.gnotes.app;
+package com.gnotes.app.ui;
 
 import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
+import com.gnotes.app.R;
 import com.gnotes.app.adapters.DrawerAdapter;
 
 public class GeekNotesActivity extends AppCompatActivity {

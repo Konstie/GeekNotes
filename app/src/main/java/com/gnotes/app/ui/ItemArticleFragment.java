@@ -1,6 +1,5 @@
-package com.gnotes.app;
+package com.gnotes.app.ui;
 
-import android.annotation.TargetApi;
 import android.content.*;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -22,7 +21,8 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.gnotes.app.data.GeekNotesDbHelper;
+import com.gnotes.app.R;
+import com.gnotes.app.database.GeekNotesDbHelper;
 import com.gnotes.app.services.GeekNotesImdbService;
 import com.gnotes.app.services.GeekNotesWikiService;
 import com.nineoldandroids.view.ViewHelper;

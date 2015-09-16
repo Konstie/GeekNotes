@@ -1,12 +1,8 @@
-package com.gnotes.app;
+package com.gnotes.app.ui;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import com.gnotes.app.R;
 
 public class ItemArticleActivity extends AppCompatActivity {
 
